@@ -6,25 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/helloTxt"
+    <Button
+        android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="90dp"
+        android:onClick="onBtnClick"
+        android:text="@string/helloBtnTxt"
+        app:layout_constraintEnd_toEndOf="@+id/emailTxt"
+        app:layout_constraintStart_toStartOf="@+id/emailTxt"
+        app:layout_constraintTop_toBottomOf="@+id/emailTxt" />
+
+    <EditText
+        android:id="@+id/firstNameTxt"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="75dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/first_name"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/helloBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/helloBtnTxt"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helloTxt"
-        android:onClick="onBtnClick"/>
+    <EditText
+        android:id="@+id/lastNameTxt"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/last_name"
+        app:layout_constraintEnd_toEndOf="@+id/firstNameTxt"
+        app:layout_constraintStart_toStartOf="@+id/firstNameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameTxt" />
+
+    <EditText
+        android:id="@+id/emailTxt"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="text|textEmailAddress"
+        android:text="@string/email"
+        app:layout_constraintEnd_toEndOf="@+id/lastNameTxt"
+        app:layout_constraintStart_toStartOf="@+id/lastNameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameTxt" />
+
+    <TextView
+        android:id="@+id/firstNameResult"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/first_name_result"
+        app:layout_constraintEnd_toEndOf="@+id/registerBtn"
+        app:layout_constraintStart_toStartOf="@+id/registerBtn"
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn" />
+
+    <TextView
+        android:id="@+id/lastNameResult"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/last_name_result"
+        app:layout_constraintEnd_toEndOf="@+id/firstNameResult"
+        app:layout_constraintStart_toStartOf="@+id/firstNameResult"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameResult" />
+
+    <TextView
+        android:id="@+id/emailResult"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/email_result"
+        app:layout_constraintEnd_toEndOf="@+id/lastNameResult"
+        app:layout_constraintStart_toStartOf="@+id/lastNameResult"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameResult" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
