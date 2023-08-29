@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,13 +23,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import kotlinx.coroutines.channels.ActorKt;
+
 public class BasicWrmActivity extends MenuBarActivity {
 
+    private RecyclerView stationsRecView;
     private ArrayList<WrmStation> wrmStationsList;
 
     @Override
@@ -31,6 +41,7 @@ public class BasicWrmActivity extends MenuBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic_wrm);
 
+        stationsRecView = findViewById(R.id.stationsRecView);
         wrmStationsList = getWrmStationsList();
     }
 
@@ -57,10 +68,17 @@ public class BasicWrmActivity extends MenuBarActivity {
             } catch (IOException ignored) {
             }
             handler.post(() -> {
-                TextView resultSumText = findViewById(R.id.totalStationsNumber);
+                /*TextView resultSumText = findViewById(R.id.totalStationsNumber);
                 ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.INVISIBLE);
-                resultSumText.setText(String.format(Locale.ENGLISH, "%d", result.size()));
+                resultSumText.setText(String.format(Locale.ENGLISH, "%d", result.size()));*/
+                ProgressBar progressBar = findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.INVISIBLE);
+
+                StationsRecViewAdapter adapter = new StationsRecViewAdapter();
+                adapter.setStations(result);
+                stationsRecView.setAdapter(adapter);
+                stationsRecView.setLayoutManager(new LinearLayoutManager(this));
             });
         });
 
@@ -118,5 +136,44 @@ class WrmStation {
         this.id = id;
         this.location = location;
         this.bikes = bikes;
+    }
+}
+
+class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter.ViewHolder> {
+
+    private ArrayList<WrmStation> stations = new ArrayList<>();
+    public StationsRecViewAdapter() {
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.station_card_item, parent, false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.stationNameTxt.setText(String.format(Locale.ENGLISH, "%d", stations.get(position).id));
+    }
+
+    @Override
+    public int getItemCount() {
+        return stations.size();
+    }
+
+    public void setStations(ArrayList<WrmStation> stations) {
+        this.stations = stations;
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView stationNameTxt;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            stationNameTxt = itemView.findViewById(R.id.stationName);
+        }
     }
 }
