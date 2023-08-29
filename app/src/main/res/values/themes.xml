@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.FirstAndroidApp" parent="Base.Theme.FirstAndroidApp" />
+    <style name="Theme.FirstAndroidApp" parent="Base.Theme.FirstAndroidApp"/>
 </resources>
