@@ -7,4 +7,6 @@
     <string name="first_name_result">First Name</string>
     <string name="last_name_result">Last Name</string>
     <string name="email_result">Email</string>
+    <string name="admin_radio_btn">Admin</string>
+    <string name="user_radio_btn">User</string>
 </resources>

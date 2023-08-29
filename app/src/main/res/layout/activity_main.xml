@@ -54,6 +54,32 @@
         app:layout_constraintStart_toStartOf="@+id/lastNameTxt"
         app:layout_constraintTop_toBottomOf="@+id/lastNameTxt" />
 
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/emailTxt"
+        app:layout_constraintStart_toStartOf="@+id/emailTxt"
+        app:layout_constraintTop_toBottomOf="@+id/emailTxt"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:id="@+id/roleRadioGrp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/isAdminRadioBtn"
+            android:text="@string/admin_radio_btn"
+            android:layout_marginEnd="20dp"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/isUserRadioBtn"
+            android:text="@string/user_radio_btn"
+            android:checked="true"/>
+
+    </RadioGroup>
+
     <TextView
         android:id="@+id/firstNameResult"
         android:layout_width="150dp"
