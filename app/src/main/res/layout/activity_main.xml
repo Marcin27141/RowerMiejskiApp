@@ -94,31 +94,41 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_person_outline"
+            android:id="@+id/personOutlineImage"/>
+
         <TextView
             android:id="@+id/firstNameResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:text="@string/first_name_result"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@id/personOutlineImage"/>
 
         <TextView
             android:id="@+id/lastNameResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:text="@string/last_name_result"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/firstNameResult" />
+            android:layout_below="@id/firstNameResult"
+            android:layout_toEndOf="@id/personOutlineImage"/>
 
         <TextView
             android:id="@+id/emailResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:text="@string/email_result"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/lastNameResult" />
+            android:layout_below="@id/lastNameResult"
+            android:layout_toEndOf="@id/personOutlineImage"/>
 
 
     </RelativeLayout>
