@@ -1,5 +1,6 @@
 package com.example.firstandroidapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,10 +79,10 @@ public class BasicWrmActivity extends MenuBarActivity {
                 ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.INVISIBLE);
 
-                StationsRecViewAdapter adapter = new StationsRecViewAdapter();
+                StationsRecViewAdapter adapter = new StationsRecViewAdapter(this);
                 adapter.setStations(result);
                 stationsRecView.setAdapter(adapter);
-                stationsRecView.setLayoutManager(new LinearLayoutManager(this));
+                stationsRecView.setLayoutManager(new GridLayoutManager(this, 2));
             });
         });
 
@@ -96,7 +100,7 @@ public class BasicWrmActivity extends MenuBarActivity {
     private static WrmStation generateWrmStation(Elements cells) {
         String SEPARATOR = ", ";
 
-        int stationId = tryParseString(cells.get(0).text());
+        String stationId = cells.get(0).text();
 
         String locationName = cells.get(1).text();
         String[] coordinates = cells.get(3).text().split(SEPARATOR);
@@ -128,11 +132,11 @@ class Location {
 }
 
 class WrmStation {
-    public final int id;
+    public final String id;
     public final Location location;
     public final ArrayList<Integer> bikes;
 
-    public WrmStation(int id, Location location, ArrayList<Integer> bikes) {
+    public WrmStation(String id, Location location, ArrayList<Integer> bikes) {
         this.id = id;
         this.location = location;
         this.bikes = bikes;
@@ -141,8 +145,10 @@ class WrmStation {
 
 class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter.ViewHolder> {
 
+    private Context context;
     private ArrayList<WrmStation> stations = new ArrayList<>();
-    public StationsRecViewAdapter() {
+    public StationsRecViewAdapter(Context context) {
+        this.context = context;
     }
 
     @NonNull
@@ -155,7 +161,11 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.stationNameTxt.setText(String.format(Locale.ENGLISH, "%d", stations.get(position).id));
+        holder.stationLocationTxt.setText(stations.get(position).location.name);
+        holder.stationIdTxt.setText((stations.get(position).id));
+        holder.parent.setOnClickListener(view -> {
+            Toast.makeText(context, stations.get(position).id, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -170,10 +180,13 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView stationNameTxt;
+        private CardView parent;
+        private TextView stationLocationTxt, stationIdTxt;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            stationNameTxt = itemView.findViewById(R.id.stationName);
+            parent = itemView.findViewById(R.id.parent);
+            stationLocationTxt = itemView.findViewById(R.id.stationLocation);
+            stationIdTxt = itemView.findViewById(R.id.stationId);
         }
     }
 }
