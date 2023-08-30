@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -26,7 +27,9 @@ import java.util.stream.Collectors;
 public class ChooseBikeActivity extends MenuBarActivity {
 
     private ActivityResultLauncher<Intent> ratingActivityResultLauncher;
+    private ArrayAdapter<String> bikesAdapter;
     private ListView bikesList;
+    private SearchView searchView;
     private List<String> stationBikes = new ArrayList<>();
     private List<String> displayedBikes = new ArrayList<>();
     private List<String> positiveBikes, negativeBikes, ungradedBikes;
@@ -43,7 +46,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
         getBikeGroups();
 
         bikesList = findViewById(R.id.bikesList);
-        ArrayAdapter<String> bikesAdapter = new ArrayAdapter<>(
+        bikesAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.bikes_list_item,
                 R.id.bikeNumber,
@@ -65,23 +68,43 @@ public class ChooseBikeActivity extends MenuBarActivity {
             } else if (isChecked && checkedId == R.id.sadButton) {
                 displayedBikes = negativeBikes;
             }
-            bikesAdapter.clear();
-            bikesAdapter.addAll(displayedBikes);
-            bikesAdapter.notifyDataSetChanged();
+            setBikesForAdapter(displayedBikes);
         });
 
         ratingActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    toggleButton.clearChecked();
-                    getBikeGroups();
-                    bikesAdapter.clear();
-                    bikesAdapter.addAll(displayedBikes);
-                    bikesAdapter.notifyDataSetChanged();
-                    Toast.makeText(this, "Rating successfully added", Toast.LENGTH_SHORT).show();
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        toggleButton.clearChecked();
+                        getBikeGroups();
+                        bikesAdapter.clear();
+                        bikesAdapter.addAll(displayedBikes);
+                        bikesAdapter.notifyDataSetChanged();
+                        Toast.makeText(this, "Rating successfully added", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        searchView = findViewById(R.id.searchView);
+        setUpSearchViewListener();
+    }
+
+    private void setUpSearchViewListener() {
+        searchView.setOnQueryTextListener(new SearchViewHandler<String>(
+                stationBikes,
+                String::contains,
+                filtered -> {
+                    if (filtered.isEmpty())
+                        Toast.makeText(this, "No bikes found", Toast.LENGTH_LONG).show();
+                    else
+                        setBikesForAdapter(filtered);
                 }
-            });
+        ));
+    }
+
+    private void setBikesForAdapter(List<String> bikesList) {
+        bikesAdapter.clear();
+        bikesAdapter.addAll(bikesList);
+        bikesAdapter.notifyDataSetChanged();
     }
 
     private void getBikeGroups() {

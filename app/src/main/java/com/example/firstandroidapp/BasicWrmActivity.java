@@ -55,37 +55,21 @@ public class BasicWrmActivity extends MenuBarActivity {
         stationsRecView = findViewById(R.id.stationsRecView);
         searchView = findViewById(R.id.searchView);
         searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterList(newText);
-                return true;
-            }
-        });
 
         getWrmStationsList();
     }
 
-    private void filterList(String newText) {
-        List<WrmStation> filteredList = new ArrayList<>();
-        for (WrmStation station : wrmStationsList) {
-            if (station.id.contains(newText) || station.location.name.toLowerCase().contains(newText.toLowerCase())) {
-                filteredList.add(station);
-            }
-        }
-
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this,"No stations found", Toast.LENGTH_LONG).show();
-        } else {
-            //displayedStations.clear();
-            //displayedStations.addAll(filteredList);
-            adapter.setStations(filteredList);
-        }
+    private void setUpSearchViewListener() {
+        searchView.setOnQueryTextListener(new SearchViewHandler<WrmStation>(
+                wrmStationsList,
+                (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
+                filtered -> {
+                    if (filtered.isEmpty())
+                        Toast.makeText(this, "No stations found", Toast.LENGTH_LONG).show();
+                    else
+                        adapter.setStations(filtered);
+                }
+        ));
     }
 
     private void getWrmStationsList() {
@@ -112,7 +96,10 @@ public class BasicWrmActivity extends MenuBarActivity {
                 displayedStations = new ArrayList<>(wrmStationsList);
             } catch (IOException ignored) {
             }
-            handler.post(this::populateViewWithStationsList);
+            handler.post(() -> {
+                setUpSearchViewListener();
+                populateViewWithStationsList();
+            });
         });
     }
 
@@ -129,14 +116,6 @@ public class BasicWrmActivity extends MenuBarActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("STATIONS_LIST", wrmStationsList);
-    }
-
-    private static int tryParseString(String text) {
-        try {
-            return Integer.parseInt(text);
-        } catch (NumberFormatException exception) {
-            return -1;
-        }
     }
 
     private static WrmStation generateWrmStation(Elements cells) {
@@ -186,6 +165,7 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
 
     private Context context;
     private List<WrmStation> stations = new ArrayList<>();
+
     public StationsRecViewAdapter(Context context) {
         this.context = context;
     }
@@ -228,6 +208,7 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
 
         private CardView parent;
         private TextView stationLocationTxt, stationIdTxt;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
