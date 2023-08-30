@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/descriptionBox"
-        android:hint="Your description"
+        android:hint="Twój opis"
         android:padding="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_below="@id/buttonToggleGroup">
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:onClick="onSubmitRating"
-        android:text="Submit"
+        android:text="Zatwierdź"
         android:layout_below="@id/descriptionBox"
         android:layout_centerHorizontal="true"/>
 

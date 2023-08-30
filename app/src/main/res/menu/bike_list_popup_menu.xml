@@ -2,5 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/addRatingItem"
-        android:title="Add rating" />
+        android:title="Dodaj ocenę" />
 </menu>

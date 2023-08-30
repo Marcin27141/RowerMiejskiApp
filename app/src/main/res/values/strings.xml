@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">FirstAndroidApp</string>
-    <string name="helloBtnTxt">Register</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
+    <string name="app_name">WRM oceniarka</string>
+    <string name="helloBtnTxt">Rejestracja</string>
+    <string name="first_name">Imię</string>
+    <string name="last_name">Nazwisko</string>
     <string name="email">Email</string>
-    <string name="first_name_result">First Name</string>
-    <string name="last_name_result">Last Name</string>
+    <string name="first_name_result">Imię</string>
+    <string name="last_name_result">Nazwisko</string>
     <string name="email_result">Email</string>
     <string name="admin_radio_btn">Admin</string>
-    <string name="user_radio_btn">User</string>
-    <string name="settings_menu_title">Settings</string>
-    <string name="language_menu_title">Language</string>
+    <string name="user_radio_btn">Użytkownik</string>
+    <string name="settings_menu_title">Ustawienia</string>
+    <string name="language_menu_title">Język</string>
 </resources>

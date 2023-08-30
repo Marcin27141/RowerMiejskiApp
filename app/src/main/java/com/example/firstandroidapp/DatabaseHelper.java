@@ -80,6 +80,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+    public void removeRating(Rating rating) {
+        getWritableDatabase().delete("ratings", "bikeId = ?", new String[]{rating.bikeId});
+    }
 }
 
 class RatingsTable {

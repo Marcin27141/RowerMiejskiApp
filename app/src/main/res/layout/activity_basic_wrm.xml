@@ -13,7 +13,7 @@
         android:iconifiedByDefault="false"
         android:layout_margin="8dp"
         android:background="@drawable/search_view_bg"
-        app:queryHint="Search here..."
+        app:queryHint="Szukaj..."
         app:iconifiedByDefault="false"/>
 
     <ProgressBar

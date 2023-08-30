@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/descriptionItem"
+        android:title="Pokaż opis" />
+    <item
+        android:id="@+id/changeRatingItem"
+        android:title="Zmień ocenę" />
+    <item
+        android:id="@+id/removeRatingItem"
+        android:title="Usuń ocenę" />
+</menu>

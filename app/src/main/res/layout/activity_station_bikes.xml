@@ -11,10 +11,10 @@
         android:iconifiedByDefault="false"
         android:layout_margin="8dp"
         android:background="@drawable/search_view_bg"
-        app:queryHint="Search here..."
+        app:queryHint="Szukaj..."
         app:iconifiedByDefault="false"/>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
+    <!--<com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/buttonToggleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,6 @@
             android:id="@+id/goodButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Positive"
             app:icon="@drawable/ic_happy_face"
             style="?attr/materialButtonOutlinedStyle"
             />
@@ -34,7 +33,6 @@
             android:id="@+id/mediumButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ungraded"
             app:icon="@drawable/ic_medium_face"
             style="?attr/materialButtonOutlinedStyle"
             />
@@ -42,9 +40,44 @@
             android:id="@+id/sadButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Negative"
             app:icon="@drawable/ic_sad_face"
             style="?attr/materialButtonOutlinedStyle"
+            />
+    </com.google.android.material.button.MaterialButtonToggleGroup>-->
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/buttonToggleGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+
+        app:singleSelection="true"
+        app:selectionRequired="true">
+        <Button
+            android:id="@+id/goodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_happy_face"
+            app:iconSize="80dp"
+            style="@style/ToggleButtonWithIconOnly"
+            />
+        <Button
+            android:id="@+id/mediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_question"
+            app:iconSize="80dp"
+            style="@style/ToggleButtonWithIconOnly"
+            />
+        <Button
+            android:id="@+id/sadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_sad_face"
+            app:iconSize="80dp"
+            style="@style/ToggleButtonWithIconOnly"
             />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
