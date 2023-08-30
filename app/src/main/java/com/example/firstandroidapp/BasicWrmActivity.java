@@ -27,6 +27,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -119,7 +120,7 @@ public class BasicWrmActivity extends MenuBarActivity {
     }
 }
 
-class Location {
+class Location implements Serializable {
     public final String name;
     public final float xCoordinate;
     public final float yCoordinate;
@@ -131,7 +132,7 @@ class Location {
     }
 }
 
-class WrmStation {
+class WrmStation implements Serializable {
     public final String id;
     public final Location location;
     public final ArrayList<Integer> bikes;
@@ -164,8 +165,15 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
         holder.stationLocationTxt.setText(stations.get(position).location.name);
         holder.stationIdTxt.setText((stations.get(position).id));
         holder.parent.setOnClickListener(view -> {
-            Toast.makeText(context, stations.get(position).id, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, stations.get(position).id, Toast.LENGTH_SHORT).show();
+            showChooseBikeActivity(position);
         });
+    }
+
+    private void showChooseBikeActivity(int stationsPosition) {
+        Intent intent = new Intent(context, ChooseBikeActivity.class);
+        intent.putExtra("SERIALIZED_STATION", stations.get(stationsPosition));
+        context.startActivity(intent);
     }
 
     @Override
