@@ -1,5 +1,6 @@
 package com.example.firstandroidapp;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -11,13 +12,17 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ChooseBikeActivity extends MenuBarActivity {
 
     private ListView bikesList;
-    private ArrayList<Integer> stationBikes = new ArrayList<>();
-    private ArrayList<Integer> displayedBikes;
+    private List<String> stationBikes = new ArrayList<>();
+    private List<String> positiveBikes;
+    private List<String> negativeBikes;
+    private List<String> ungradedBikes;
+    private List<String> displayedBikes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +32,15 @@ public class ChooseBikeActivity extends MenuBarActivity {
         WrmStation station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
         if (station != null) stationBikes = station.bikes;
 
-        bikesList = findViewById(R.id.bikesList);
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        ArrayList<Rating> ratings = dbHelper.getAllRatings();
+        positiveBikes = ratings.stream().filter(r -> r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
+        negativeBikes = ratings.stream().filter(r -> !r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
+        ungradedBikes = stationBikes.stream().filter(b -> ratings.stream().noneMatch(r -> r.bikeId.equals(b))).collect(Collectors.toList());
         displayedBikes = new ArrayList<>(stationBikes);
-        ArrayAdapter<Integer> bikesAdapter = new ArrayAdapter<>(
+
+        bikesList = findViewById(R.id.bikesList);
+        ArrayAdapter<String> bikesAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.bikes_list_item,
                 R.id.bikeNumber,
@@ -45,11 +56,11 @@ public class ChooseBikeActivity extends MenuBarActivity {
         MaterialButtonToggleGroup toggleButton = findViewById(R.id.toggleButton);
         toggleButton.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked && checkedId == R.id.goodButton) {
-                displayedBikes = new ArrayList<>(stationBikes.subList(0, 2)); //for testing
+                displayedBikes = positiveBikes;
             } else if (isChecked && checkedId == R.id.mediumButton) {
-                displayedBikes = new ArrayList<>(stationBikes.subList(2, 4)); //for testing
+                displayedBikes = ungradedBikes;
             } else if (isChecked && checkedId == R.id.sadButton) {
-                displayedBikes = new ArrayList<>(stationBikes.subList(4, 6)); //for testing
+                displayedBikes = negativeBikes;
             }
             bikesAdapter.clear();
             bikesAdapter.addAll(displayedBikes);

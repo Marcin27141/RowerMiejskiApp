@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,10 +122,7 @@ public class BasicWrmActivity extends MenuBarActivity {
 
         String bikesString = cells.get(5).text();
         String[] bikesArray = bikesString.length() == 0 ? new String[0] : bikesString.split(SEPARATOR);
-        ArrayList<Integer> bikes = new ArrayList<>();
-        for (String bikeNumber : bikesArray) {
-            bikes.add(tryParseString(bikeNumber));
-        }
+        ArrayList<String> bikes = new ArrayList<>(Arrays.asList(bikesArray));
 
         return new WrmStation(stationId, location, bikes);
     }
@@ -144,9 +143,9 @@ class Location implements Serializable {
 class WrmStation implements Serializable {
     public final String id;
     public final Location location;
-    public final ArrayList<Integer> bikes;
+    public final ArrayList<String> bikes;
 
-    public WrmStation(String id, Location location, ArrayList<Integer> bikes) {
+    public WrmStation(String id, Location location, ArrayList<String> bikes) {
         this.id = id;
         this.location = location;
         this.bikes = bikes;
