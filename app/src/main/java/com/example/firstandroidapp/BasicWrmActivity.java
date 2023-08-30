@@ -64,10 +64,9 @@ public class BasicWrmActivity extends MenuBarActivity {
                 wrmStationsList,
                 (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
                 filtered -> {
+                    adapter.setStations(filtered);
                     if (filtered.isEmpty())
                         Toast.makeText(this, R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
-                    else
-                        adapter.setStations(filtered);
                 }
         ));
     }
