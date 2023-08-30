@@ -1,10 +1,13 @@
 package com.example.firstandroidapp;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -53,7 +56,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true); // Enable the up button
         }
 
-        MaterialButtonToggleGroup toggleButton = findViewById(R.id.toggleButton);
+        MaterialButtonToggleGroup toggleButton = findViewById(R.id.buttonToggleGroup);
         toggleButton.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked && checkedId == R.id.goodButton) {
                 displayedBikes = positiveBikes;
@@ -66,6 +69,26 @@ public class ChooseBikeActivity extends MenuBarActivity {
             bikesAdapter.addAll(displayedBikes);
             bikesAdapter.notifyDataSetChanged();
         });
+    }
+
+    public void onBikeListMoreIconClicked(View view) {
+        int position = bikesList.getPositionForView(view);
+
+        if (position != ListView.INVALID_POSITION) {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.inflate(R.menu.bike_list_popup_menu);
+
+            // Set a click listener for the menu items
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.addRatingItem) {
+                    Intent intent = new Intent(this, RateBikeActivity.class);
+                    intent.putExtra("BIKE_ID", displayedBikes.get(position));
+                    startActivity(intent);
+                }
+                return true;
+            });
+            popupMenu.show();
+        }
     }
 
     @Override

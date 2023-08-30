@@ -1,5 +1,6 @@
 package com.example.firstandroidapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -57,6 +58,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return ratingsList;
     }
+
+    public boolean addRating(Rating rating) {
+        ContentValues values = new ContentValues();
+        values.put("bikeId", rating.bikeId);
+        values.put("wasPositive", rating.wasPositive);
+        values.put("description", rating.description);
+        long newRowId = getWritableDatabase().insert("ratings", null, values);
+        return true;
+    }
 }
 
 class RatingsTable {
@@ -70,13 +80,17 @@ class RatingsTable {
 }
 
 class Rating {
-    public final int reviewId;
+    public int reviewId = -1;
     public final String bikeId;
     public final boolean wasPositive;
     public final String description;
 
     public Rating(int reviewId, String bikeId, boolean wasPositive, String description) {
+        this(bikeId, wasPositive, description);
         this.reviewId = reviewId;
+    }
+
+    public Rating(String bikeId, boolean wasPositive, String description) {
         this.bikeId = bikeId;
         this.wasPositive = wasPositive;
         this.description = description;

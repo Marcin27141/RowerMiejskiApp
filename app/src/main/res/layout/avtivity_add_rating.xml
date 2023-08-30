@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".RateBikeActivity">
+
+    <ImageView
+        android:id="@+id/bikeIcon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_bike"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bike Id"
+        android:id="@+id/bikeId"
+        android:layout_centerHorizontal="true"
+        android:textSize="50sp"
+        android:layout_below="@id/bikeIcon"/>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/buttonToggleGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bikeId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:checkedButton="@id/sadButton"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+        <Button
+            android:id="@+id/goodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_happy_face"
+            app:iconSize="80dp"
+            style="@style/ToggleButtonWithIconOnly"
+            />
+        <Button
+            android:id="@+id/sadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_sad_face"
+            app:iconSize="80dp"
+            style="@style/ToggleButtonWithIconOnly"
+            />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/descriptionBox"
+        android:hint="Your description"
+        android:padding="10dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_below="@id/buttonToggleGroup">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="4"
+            android:inputType="textMultiLine"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/rateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onSubmitRating"
+        android:text="Submit"
+        android:layout_below="@id/descriptionBox"
+        android:layout_centerHorizontal="true"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/rateButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

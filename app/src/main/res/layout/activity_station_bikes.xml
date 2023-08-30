@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggleButton"
+        android:id="@+id/buttonToggleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -51,7 +51,7 @@
         android:id="@+id/bikesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toggleButton"
+        android:layout_below="@id/buttonToggleGroup"
         android:layout_marginTop="10dp"/>
 
 </RelativeLayout>
