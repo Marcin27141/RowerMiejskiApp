@@ -39,7 +39,7 @@ import kotlinx.coroutines.channels.ActorKt;
 public class BasicWrmActivity extends MenuBarActivity {
 
     private RecyclerView stationsRecView;
-    private ArrayList<WrmStation> wrmStationsList;
+    private ArrayList<WrmStation> wrmStationsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +47,16 @@ public class BasicWrmActivity extends MenuBarActivity {
         setContentView(R.layout.activity_basic_wrm);
 
         stationsRecView = findViewById(R.id.stationsRecView);
-        wrmStationsList = getWrmStationsList();
+
+        if (savedInstanceState != null) {
+            wrmStationsList = (ArrayList<WrmStation>) savedInstanceState.getSerializable("STATIONS_LIST");
+            populateViewWithStationsList();
+        } else {
+            getWrmStationsList();
+        }
     }
 
-    private ArrayList<WrmStation> getWrmStationsList() {
+    private void getWrmStationsList() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -70,24 +76,27 @@ public class BasicWrmActivity extends MenuBarActivity {
                         result.add(generateWrmStation(cells));
                     }
                 }
+                wrmStationsList = result;
             } catch (IOException ignored) {
             }
-            handler.post(() -> {
-                /*TextView resultSumText = findViewById(R.id.totalStationsNumber);
-                ProgressBar progressBar = findViewById(R.id.progressBar);
-                progressBar.setVisibility(View.INVISIBLE);
-                resultSumText.setText(String.format(Locale.ENGLISH, "%d", result.size()));*/
-                ProgressBar progressBar = findViewById(R.id.progressBar);
-                progressBar.setVisibility(View.INVISIBLE);
-
-                StationsRecViewAdapter adapter = new StationsRecViewAdapter(this);
-                adapter.setStations(result);
-                stationsRecView.setAdapter(adapter);
-                stationsRecView.setLayoutManager(new GridLayoutManager(this, 2));
-            });
+            handler.post(this::populateViewWithStationsList);
         });
+    }
 
-        return result;
+    private void populateViewWithStationsList() {
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        StationsRecViewAdapter adapter = new StationsRecViewAdapter(this);
+        adapter.setStations(wrmStationsList);
+        stationsRecView.setAdapter(adapter);
+        stationsRecView.setLayoutManager(new GridLayoutManager(this, 2));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("STATIONS_LIST", wrmStationsList);
     }
 
     private static int tryParseString(String text) {
