@@ -25,7 +25,8 @@ public class ChooseBikeActivity extends MenuBarActivity {
         bikesList = findViewById(R.id.bikesList);
         ArrayAdapter<Integer> bikesAdapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.bikes_list_item,
+                R.id.bikeNumber,
                 station == null ? new ArrayList<>() : station.bikes
         );
         bikesList.setAdapter(bikesAdapter);
