@@ -9,7 +9,7 @@ android:padding="16dp">
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="This is a dialog popup"
+    android:text="@string/dialog_message_placeholder"
     android:id="@+id/descriptionDialogTxt"
     android:layout_centerInParent="true"/>
 

@@ -65,7 +65,7 @@ public class BasicWrmActivity extends MenuBarActivity {
                 (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
                 filtered -> {
                     if (filtered.isEmpty())
-                        Toast.makeText(this, "No stations found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
                     else
                         adapter.setStations(filtered);
                 }
@@ -183,7 +183,6 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
         holder.stationLocationTxt.setText(stations.get(position).location.name);
         holder.stationIdTxt.setText((stations.get(position).id));
         holder.parent.setOnClickListener(view -> {
-            //Toast.makeText(context, stations.get(position).id, Toast.LENGTH_SHORT).show();
             showChooseBikeActivity(position);
         });
     }

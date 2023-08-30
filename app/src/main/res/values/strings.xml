@@ -1,14 +1,25 @@
 <resources>
     <string name="app_name">WRM oceniarka</string>
-    <string name="helloBtnTxt">Rejestracja</string>
+    <string name="register_btn_txt">Rejestracja</string>
     <string name="first_name">Imię</string>
     <string name="last_name">Nazwisko</string>
     <string name="email">Email</string>
-    <string name="first_name_result">Imię</string>
-    <string name="last_name_result">Nazwisko</string>
     <string name="email_result">Email</string>
     <string name="admin_radio_btn">Admin</string>
     <string name="user_radio_btn">Użytkownik</string>
     <string name="settings_menu_title">Ustawienia</string>
     <string name="language_menu_title">Język</string>
+    <string name="search_incentive">Szukaj...</string>
+    <string name="bike_id_placeholder">Bike Id</string>
+    <string name="description_incentive">Twój opis</string>
+    <string name="submit_rating_btn_txt">Zatwierdź</string>
+    <string name="dialog_message_placeholder">This is a dialog popup</string>
+    <string name="station_location_placeholder">Station location</string>
+    <string name="station_id_placeholder">Station id</string>
+    <string name="menu_show_description">Pokaż opis</string>
+    <string name="menu_change_rating">Zmień ocenę</string>
+    <string name="menu_delete_rating">Usuń ocenę</string>
+    <string name="menu_add_rating">Dodaj ocenę</string>
+    <string name="no_stations_found_msg">Nie znaleziono żadnych stacji</string>
+    <string name="no_bikes_found_msg">Nie znaleziono żadnych rowerów</string>
 </resources>

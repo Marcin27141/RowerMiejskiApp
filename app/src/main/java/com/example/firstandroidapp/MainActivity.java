@@ -21,9 +21,9 @@ public class MainActivity extends MenuBarActivity {
         RadioGroup roleRadioGroup = findViewById(R.id.roleRadioGrp);
         roleRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
             if (i == R.id.isAdminRadioBtn) {
-                Toast.makeText(MainActivity.this, "Admin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.admin_radio_btn, Toast.LENGTH_SHORT).show();
             } else if (i == R.id.isUserRadioBtn) {
-                Toast.makeText(MainActivity.this, "User", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.user_radio_btn, Toast.LENGTH_SHORT).show();
             }
         });
 

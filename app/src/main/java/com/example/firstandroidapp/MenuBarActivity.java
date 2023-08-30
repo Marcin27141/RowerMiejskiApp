@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 abstract class MenuBarActivity extends AppCompatActivity {
+    private static String activeLanguage = "en";
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -27,10 +28,12 @@ abstract class MenuBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.settings_menu) {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.settings_menu_title, Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.language_menu) {
-            Toast.makeText(this, "Language", Toast.LENGTH_SHORT).show();
+            activeLanguage = (activeLanguage.equals("en")) ? "pl" : "en";
+            LocaleHelper.setLocale(this, activeLanguage);
+            recreate();
             return true;
         }
         return super.onOptionsItemSelected(item);

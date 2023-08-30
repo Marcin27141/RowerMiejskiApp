@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
         android:onClick="onRegisterClicked"
-        android:text="@string/helloBtnTxt"
+        android:text="@string/register_btn_txt"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/roleRadioGrp"/>
 

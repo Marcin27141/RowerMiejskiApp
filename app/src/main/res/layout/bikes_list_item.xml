@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingLeft="20dp">
+    android:paddingStart="20dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -16,12 +16,12 @@
         android:layout_width="120dp"
         android:layout_height="60dp"
         android:id="@+id/bikeNumber"
-        android:text="Number"
+        android:text="@string/bike_id_placeholder"
         android:textSize="30sp"
         android:layout_gravity="center_horizontal"
         android:paddingTop="18dp"
         android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/imageView"/>
+        android:layout_toEndOf="@id/imageView"/>
 
     <ImageView
         android:id="@+id/trailingIcon"
@@ -31,7 +31,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="25dp"
         android:onClick="onBikeListMoreIconClicked"
-        android:layout_toRightOf="@id/bikeNumber"
-        android:layout_alignParentRight="true"/>
+        android:layout_toEndOf="@id/bikeNumber"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

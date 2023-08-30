@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bike Id"
+        android:text="@string/bike_id_placeholder"
         android:id="@+id/bikeId"
         android:layout_centerHorizontal="true"
         android:textSize="50sp"
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/descriptionBox"
-        android:hint="Twój opis"
+        android:hint="@string/description_incentive"
         android:padding="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_below="@id/buttonToggleGroup">
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:onClick="onSubmitRating"
-        android:text="Zatwierdź"
+        android:text="@string/submit_rating_btn_txt"
         android:layout_below="@id/descriptionBox"
         android:layout_centerHorizontal="true"/>
 

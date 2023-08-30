@@ -11,39 +11,8 @@
         android:iconifiedByDefault="false"
         android:layout_margin="8dp"
         android:background="@drawable/search_view_bg"
-        app:queryHint="Szukaj..."
+        app:queryHint="@string/search_incentive"
         app:iconifiedByDefault="false"/>
-
-    <!--<com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/buttonToggleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        app:singleSelection="true"
-        android:layout_below="@id/searchView">
-        <Button
-            android:id="@+id/goodButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_happy_face"
-            style="?attr/materialButtonOutlinedStyle"
-            />
-        <Button
-            android:id="@+id/mediumButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_medium_face"
-            style="?attr/materialButtonOutlinedStyle"
-            />
-        <Button
-            android:id="@+id/sadButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_sad_face"
-            style="?attr/materialButtonOutlinedStyle"
-            />
-    </com.google.android.material.button.MaterialButtonToggleGroup>-->
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/buttonToggleGroup"
@@ -80,16 +49,6 @@
             style="@style/ToggleButtonWithIconOnly"
             />
     </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <!---<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/toggleButton"
-        android:id="@+id/bikesNumberInfoText"
-        android:text="Total bikes:"
-        android:textStyle="bold"
-        android:textSize="50sp"/>-->
 
     <ListView
         android:id="@+id/bikesList"

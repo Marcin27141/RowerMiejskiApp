@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="@string/first_name_result"
+        android:text="@string/first_name"
         android:layout_below="@id/personOutlineImage"/>
 
     <TextView
@@ -29,7 +29,7 @@
         android:layout_below="@id/firstNameResult"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
-        android:text="@string/last_name_result" />
+        android:text="@string/last_name" />
 
     <TextView
         android:id="@+id/emailResult"

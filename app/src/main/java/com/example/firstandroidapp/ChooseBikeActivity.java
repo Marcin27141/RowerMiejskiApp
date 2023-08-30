@@ -106,7 +106,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
                 String::contains,
                 filtered -> {
                     if (filtered.isEmpty())
-                        Toast.makeText(this, "No bikes found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.no_bikes_found_msg, Toast.LENGTH_LONG).show();
                     else
                         setBikesForAdapter(filtered);
                 }

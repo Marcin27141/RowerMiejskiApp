@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Station location"
+            android:text="@string/station_location_placeholder"
             android:maxLines="3"
             android:ellipsize="end"
             android:textStyle="bold"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/stationLocation"
             android:layout_marginTop="7dp"
-            android:text="Station id"
+            android:text="@string/station_id_placeholder"
             android:textStyle="italic"
             android:layout_marginStart="5dp"/>
 
