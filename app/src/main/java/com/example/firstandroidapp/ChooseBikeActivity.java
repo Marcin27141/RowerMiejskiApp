@@ -1,5 +1,6 @@
 package com.example.firstandroidapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,6 +10,10 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -20,12 +25,12 @@ import java.util.stream.Collectors;
 
 public class ChooseBikeActivity extends MenuBarActivity {
 
+    private ActivityResultLauncher<Intent> ratingActivityResultLauncher;
     private ListView bikesList;
     private List<String> stationBikes = new ArrayList<>();
-    private List<String> positiveBikes;
-    private List<String> negativeBikes;
-    private List<String> ungradedBikes;
-    private List<String> displayedBikes;
+    private List<String> displayedBikes = new ArrayList<>();
+    private List<String> positiveBikes, negativeBikes, ungradedBikes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
         WrmStation station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
         if (station != null) stationBikes = station.bikes;
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        ArrayList<Rating> ratings = dbHelper.getAllRatings();
-        positiveBikes = ratings.stream().filter(r -> r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
-        negativeBikes = ratings.stream().filter(r -> !r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
-        ungradedBikes = stationBikes.stream().filter(b -> ratings.stream().noneMatch(r -> r.bikeId.equals(b))).collect(Collectors.toList());
-        displayedBikes = new ArrayList<>(stationBikes);
+        getBikeGroups();
 
         bikesList = findViewById(R.id.bikesList);
         ArrayAdapter<String> bikesAdapter = new ArrayAdapter<>(
@@ -69,6 +69,31 @@ public class ChooseBikeActivity extends MenuBarActivity {
             bikesAdapter.addAll(displayedBikes);
             bikesAdapter.notifyDataSetChanged();
         });
+
+        ratingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    toggleButton.clearChecked();
+                    getBikeGroups();
+                    bikesAdapter.clear();
+                    bikesAdapter.addAll(displayedBikes);
+                    bikesAdapter.notifyDataSetChanged();
+                    Toast.makeText(this, "Rating successfully added", Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    private void getBikeGroups() {
+        ArrayList<Rating> ratings;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
+            ratings = dbHelper.getAllRatings();
+            positiveBikes = ratings.stream().filter(r -> r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
+            negativeBikes = ratings.stream().filter(r -> !r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
+            ungradedBikes = stationBikes.stream().filter(b -> ratings.stream().noneMatch(r -> r.bikeId.equals(b))).collect(Collectors.toList());
+        }
+        displayedBikes.clear();
+        displayedBikes.addAll(stationBikes);
     }
 
     public void onBikeListMoreIconClicked(View view) {
@@ -83,7 +108,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
                 if (item.getItemId() == R.id.addRatingItem) {
                     Intent intent = new Intent(this, RateBikeActivity.class);
                     intent.putExtra("BIKE_ID", displayedBikes.get(position));
-                    startActivity(intent);
+                    ratingActivityResultLauncher.launch(intent);
                 }
                 return true;
             });

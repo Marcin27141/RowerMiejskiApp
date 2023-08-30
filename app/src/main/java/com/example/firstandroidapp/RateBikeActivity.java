@@ -1,9 +1,9 @@
 package com.example.firstandroidapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -13,10 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -62,6 +60,10 @@ public class RateBikeActivity extends MenuBarActivity {
             }
             handler.post(() -> {
                 progressBar.setVisibility(View.INVISIBLE);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("RATING_ADDED", true);
+                setResult(RESULT_OK, resultIntent);
+                finish();
             });
         });
     }

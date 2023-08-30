@@ -60,12 +60,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean addRating(Rating rating) {
-        ContentValues values = new ContentValues();
-        values.put("bikeId", rating.bikeId);
-        values.put("wasPositive", rating.wasPositive);
-        values.put("description", rating.description);
-        long newRowId = getWritableDatabase().insert("ratings", null, values);
-        return true;
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            db.beginTransaction();
+
+            db.delete("ratings", "bikeId = ?", new String[]{rating.bikeId});
+
+            ContentValues values = new ContentValues();
+            values.put("bikeId", rating.bikeId);
+            values.put("wasPositive", rating.wasPositive);
+            values.put("description", rating.description);
+            db.insert("ratings", null, values);
+
+            db.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            db.endTransaction();
+        }
     }
 }
 
