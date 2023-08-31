@@ -8,9 +8,18 @@
     <color name="purple">#260099</color>
     <color name="shadow_purple">#7371f0</color>
 
+    <color name="peach">#F3E1C0</color>
+    <color name="shadow_peach">#c2b397</color>
+
+
     <color name="red">#ed341c</color>
     <color name="orange">#f2962c</color>
     <color name="green">#06a128</color>
+    <color name="dark_green">#018a23</color>
     <color name="pink">#e602de</color>
+
+    <color name="blue_grotto">#059DC0</color>
+    <color name="maroon">#661837</color>
+
 
 </resources>

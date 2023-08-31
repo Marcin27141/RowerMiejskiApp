@@ -19,6 +19,7 @@ abstract class MenuBarActivity extends AppCompatActivity {
         lightModeItem = menu.findItem(R.id.light_mode_menu);
         LightModeHelper.setLightModeIcon(lightModeItem);
 
+
         return true;
     }
 

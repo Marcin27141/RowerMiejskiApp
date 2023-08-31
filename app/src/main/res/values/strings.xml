@@ -22,4 +22,5 @@
     <string name="menu_add_rating">Dodaj ocenę</string>
     <string name="no_stations_found_msg">Nie znaleziono żadnych stacji</string>
     <string name="no_bikes_found_msg">Nie znaleziono żadnych rowerów</string>
+    <string name="no_description">Brak opisu</string>
 </resources>

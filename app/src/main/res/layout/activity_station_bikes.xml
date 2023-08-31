@@ -33,7 +33,8 @@
             app:iconSize="80dp"
             app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
-            app:strokeWidth="2dp" />
+            app:strokeWidth="2dp"
+            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
 
         <Button
             android:id="@+id/mediumButton"
@@ -44,7 +45,8 @@
             app:iconSize="80dp"
             app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
-            app:strokeWidth="2dp"/>
+            app:strokeWidth="2dp"
+            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
 
         <Button
             android:id="@+id/sadButton"
@@ -55,7 +57,9 @@
             app:iconSize="80dp"
             app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
-            app:strokeWidth="2dp" />
+            app:strokeWidth="2dp"
+            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
+
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <ListView

@@ -151,7 +151,9 @@ public class ChooseBikeActivity extends MenuBarActivity {
                         View dialogView = inflater.inflate(R.layout.description_dialog, null);
                         TextView dialogTextView = dialogView.findViewById(R.id.descriptionDialogTxt);
                         Optional<Rating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
-                        rating.ifPresent(value -> dialogTextView.setText(value.description));
+                        boolean descriptionProvided = rating.isPresent() && !rating.get().description.isEmpty();
+                        String descriptionTxt = descriptionProvided ? rating.get().description : getResources().getString(R.string.no_description);
+                        dialogTextView.setText(descriptionTxt);
 
                         builder.setView(dialogView)
                                 .setTitle("Description")
