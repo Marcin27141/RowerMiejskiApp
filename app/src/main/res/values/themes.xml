@@ -1,8 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.FirstAndroidApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.FirstAndroidApp" parent="Theme.MaterialComponents.Light">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:colorControlNormal">@color/pink</item>
+        <item name="android:colorBackground">@color/cyan</item>
+        <item name="android:strokeColor">@color/red</item>
+
+        <!--<item name="android:colorPressedHighlight">@color/purple</item>
+        <item name="android:iconTint">@color/black</item>
+
+        <item name="android:colorLongPressedHighlight">@color/green</item>
+        <item name="android:colorFocusedHighlight">@color/green</item>
+        <item name="android:colorButtonNormal">@color/white</item>-->
     </style>
 
     <style name="Theme.FirstAndroidApp" parent="Base.Theme.FirstAndroidApp"/>

@@ -21,33 +21,38 @@
         android:layout_below="@id/searchView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        app:singleSelection="true"
-        app:selectionRequired="true">
         <Button
             android:id="@+id/goodButton"
+            style="@style/ToggleButtonWithIconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_happy_face"
             app:iconSize="80dp"
-            style="@style/ToggleButtonWithIconOnly"
-            />
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp" />
+
         <Button
             android:id="@+id/mediumButton"
+            style="@style/ToggleButtonWithIconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_question"
             app:iconSize="80dp"
-            style="@style/ToggleButtonWithIconOnly"
-            />
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp"/>
+
         <Button
             android:id="@+id/sadButton"
+            style="@style/ToggleButtonWithIconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_sad_face"
             app:iconSize="80dp"
-            style="@style/ToggleButtonWithIconOnly"
-            />
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <ListView
