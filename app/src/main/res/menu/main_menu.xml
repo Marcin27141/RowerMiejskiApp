@@ -6,12 +6,14 @@
         android:title="@string/language_menu_title"
         android:id="@+id/language_menu"
         android:icon="@drawable/ic_language"
+        app:iconTint="?android:attr/iconTintMode"
         app:showAsAction="ifRoom"/>
 
     <item
         android:title="@string/light_mode_menu_title"
         android:id="@+id/light_mode_menu"
         android:icon="@drawable/ic_sun"
+        app:iconTint="?android:attr/iconTintMode"
         app:showAsAction="ifRoom"/>
 
 </menu>

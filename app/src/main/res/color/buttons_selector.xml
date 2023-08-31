@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="1.00" android:color="?android:attr/colorPressedHighlight" android:state_checkable="true" android:state_checked="true" android:state_enabled="true"/>
+    <item android:alpha="0.60" android:color="?android:attr/buttonTint" android:state_checkable="true" android:state_checked="false" android:state_enabled="true"/>
+    <item android:alpha="1.00" android:color="?android:attr/colorPressedHighlight" android:state_enabled="true"/>
+    <item android:alpha="0.38" android:color="?android:attr/buttonTint"/>
+</selector>

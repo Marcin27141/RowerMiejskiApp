@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_happy_face"
             app:iconSize="80dp"
+            app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
             app:strokeWidth="2dp" />
 
@@ -41,6 +42,7 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_question"
             app:iconSize="80dp"
+            app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
             app:strokeWidth="2dp"/>
 
@@ -51,6 +53,7 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_sad_face"
             app:iconSize="80dp"
+            app:iconTint="@color/buttons_selector"
             app:strokeColor="@color/black"
             app:strokeWidth="2dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>

@@ -4,7 +4,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="cyan">#07f5f1</color>
+    <color name="shadow_cyan">#03c2fc</color>
     <color name="purple">#260099</color>
+    <color name="shadow_purple">#7371f0</color>
 
     <color name="red">#ed341c</color>
     <color name="orange">#f2962c</color>

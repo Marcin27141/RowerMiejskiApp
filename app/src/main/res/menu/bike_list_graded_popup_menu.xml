@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/descriptionItem"
-        android:title="@string/menu_show_description" />
+        android:title="@string/menu_show_description"/>
     <item
         android:id="@+id/changeRatingItem"
         android:title="@string/menu_change_rating" />

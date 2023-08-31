@@ -146,7 +146,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
                         rating.ifPresent(value -> new DatabaseHelper(this).removeRating(value));
                         resetGradingGroups("Rating successfully deleted");
                     } else if (item.getItemId() == R.id.descriptionItem) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
                         LayoutInflater inflater = getLayoutInflater();
                         View dialogView = inflater.inflate(R.layout.description_dialog, null);
                         TextView dialogTextView = dialogView.findViewById(R.id.descriptionDialogTxt);
