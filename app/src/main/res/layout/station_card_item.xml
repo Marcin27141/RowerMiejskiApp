@@ -45,6 +45,19 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_wrm_banner_foreground"/>
 
+        <CheckBox
+            android:id="@+id/star_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:button="@drawable/favourite_selector"
+            app:buttonTint="@android:color/white"
+            android:layout_alignEnd="@id/stationImage"
+            android:layout_alignBottom="@id/stationImage"
+            android:layout_margin="10dp"
+            />
+
     </RelativeLayout>
 
 
