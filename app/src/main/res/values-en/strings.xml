@@ -8,7 +8,7 @@
     <string name="email_result">Email</string>
     <string name="admin_radio_btn">Admin</string>
     <string name="user_radio_btn">User</string>
-    <string name="settings_menu_title">Settings</string>
+    <string name="light_mode_menu_title">Settings</string>
     <string name="language_menu_title">Language</string>
     <string name="search_incentive">Search...</string>
     <string name="bike_id_placeholder">Bike Id</string>
