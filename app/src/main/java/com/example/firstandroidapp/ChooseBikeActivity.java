@@ -24,6 +24,7 @@ import androidx.appcompat.widget.SearchView;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
         if (station != null) stationBikes = station.bikes;
 
         getBikeGroups();
+        displayedBikes = new ArrayList<>(stationBikes);
 
         bikesList = findViewById(R.id.bikesList);
         bikesAdapter = new ArrayAdapter<>(
@@ -94,9 +96,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private void resetGradingGroups(String toastMessage) {
         buttonToggleGroup.clearChecked();
         getBikeGroups();
-        bikesAdapter.clear();
-        bikesAdapter.addAll(displayedBikes);
-        bikesAdapter.notifyDataSetChanged();
+        setBikesForAdapter(stationBikes);
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
@@ -105,10 +105,9 @@ public class ChooseBikeActivity extends MenuBarActivity {
                 stationBikes,
                 String::contains,
                 filtered -> {
+                    setBikesForAdapter(filtered);
                     if (filtered.isEmpty())
                         Toast.makeText(this, R.string.no_bikes_found_msg, Toast.LENGTH_LONG).show();
-                    else
-                        setBikesForAdapter(filtered);
                 }
         ));
     }
@@ -122,12 +121,10 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private void getBikeGroups() {
         try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
             ratings = dbHelper.getAllRatings();
-            positiveBikes = ratings.stream().filter(r -> r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
-            negativeBikes = ratings.stream().filter(r -> !r.wasPositive).map(r -> r.bikeId).collect(Collectors.toList());
+            positiveBikes = ratings.stream().filter(r -> r.wasPositive && stationBikes.contains(r.bikeId)).map(r -> r.bikeId).collect(Collectors.toList());
+            negativeBikes = ratings.stream().filter(r -> !r.wasPositive && stationBikes.contains(r.bikeId)).map(r -> r.bikeId).collect(Collectors.toList());
             ungradedBikes = stationBikes.stream().filter(b -> ratings.stream().noneMatch(r -> r.bikeId.equals(b))).collect(Collectors.toList());
         }
-        displayedBikes.clear();
-        displayedBikes.addAll(stationBikes);
     }
 
     public void onBikeListMoreIconClicked(View view) {
