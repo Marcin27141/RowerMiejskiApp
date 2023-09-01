@@ -42,14 +42,15 @@ public class FragmentsAdapters  implements OnStationLikedListener {
     }
 
     @Override
-    public void onStationLiked(WrmStation station, boolean isLiked) {
+    public void onStationLiked(StationsRecViewAdapter sender, WrmStation station, boolean isLiked) {
         if (isLiked)
             likedStations.add(station);
-        else {
+        else if (sender == allStationsAdapter) {
             likedStations.remove(station);
-            allStationsAdapter.uncheckStarIconCheckBox(station.id);
+        } else if (sender == likedStationsAdapter) {
+            likedStations.remove(station);
+            allStationsAdapter.setStations(stations);
         }
-
         likedStationsAdapter.setStations(likedStations);
         likedStationsAdapter.notifyDataSetChanged();
     }

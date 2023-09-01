@@ -74,7 +74,7 @@ public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecView
                 }
 
                 for (OnStationLikedListener listener : onStationLikedListeners)
-                    listener.onStationLiked(stations.get(position), isChecked);
+                    listener.onStationLiked(this, stations.get(position), isChecked);
         });
 
 

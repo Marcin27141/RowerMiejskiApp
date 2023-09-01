@@ -35,11 +35,7 @@ public class StationsViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 1) {
-            try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-                ArrayList<String> likedStationsIds = dbHelper.getLikedStationsIds();
-                likedStations = new ArrayList<>(stations.stream().filter(s -> likedStationsIds.contains(s.id)).collect(Collectors.toList()));
-                return new LikedStationsFragment(context, new ArrayList<>(likedStations));
-            }
+            return new LikedStationsFragment(context, stations);
         }
         return new AllStationsFragment(context, stations);
     }

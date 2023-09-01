@@ -13,27 +13,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.firstandroidapp.DatabaseHelper;
 import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.SearchViewHandler;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class LikedStationsFragment extends Fragment {
 
     private Context context;
+    private ArrayList<WrmStation> stations;
     private ArrayList<WrmStation> likedStations;
     private StationsRecViewAdapter adapter;
     private SearchView searchView;
 
     public LikedStationsFragment(){}
 
-    public LikedStationsFragment(Context context, ArrayList<WrmStation> likedStations) {
+    public LikedStationsFragment(Context context, ArrayList<WrmStation> stations) {
         this.context = context;
-        this.likedStations = likedStations;
+        this.stations = stations;
+        this.likedStations = getLikedStations(stations);
         FragmentsAdapters adapters = FragmentsAdapters.getFragmentsAdapters(context,likedStations);
         this.adapter = adapters.getLikedStationsAdapter();
     }
+
+    private ArrayList<WrmStation> getLikedStations(ArrayList<WrmStation> stations) {
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            ArrayList<String> likedStationsIds = dbHelper.getLikedStationsIds();
+            return new ArrayList<>(stations.stream().filter(s -> likedStationsIds.contains(s.id)).collect(Collectors.toList()));
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +53,8 @@ public class LikedStationsFragment extends Fragment {
 
         if (savedInstanceState != null) {
             context = getActivity();
-            likedStations = (ArrayList<WrmStation>) savedInstanceState.getSerializable("liked_stations");
+            stations = (ArrayList<WrmStation>) savedInstanceState.getSerializable("stations");
+            likedStations = getLikedStations(stations);
             adapter = FragmentsAdapters.getFragmentsAdapters(context, likedStations).getLikedStationsAdapter();
         }
     }
@@ -79,6 +92,6 @@ public class LikedStationsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putSerializable("liked_stations", likedStations);
+        outState.putSerializable("stations", stations);
     }
 }

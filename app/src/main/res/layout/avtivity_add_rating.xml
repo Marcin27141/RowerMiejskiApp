@@ -80,7 +80,8 @@
         android:onClick="onSubmitRating"
         android:text="@string/submit_rating_btn_txt"
         android:layout_below="@id/descriptionBox"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="?android:attr/buttonTint"/>
 
     <ProgressBar
         android:layout_width="wrap_content"
