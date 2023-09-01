@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -184,6 +186,20 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
         holder.parent.setOnClickListener(view -> {
             showChooseBikeActivity(position);
         });
+
+        holder.starIconCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+                if (isChecked) {
+                    dbHelper.addLikedStation(holder.stationIdTxt.getText().toString());
+                    Toast.makeText(context, "Added to favourites", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    dbHelper.removeLikedStation(holder.stationIdTxt.getText().toString());
+                    Toast.makeText(context, "Removed from favourites", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void showChooseBikeActivity(int stationsPosition) {
@@ -206,12 +222,14 @@ class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter
 
         private CardView parent;
         private TextView stationLocationTxt, stationIdTxt;
+        private CheckBox starIconCheckBox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
             stationLocationTxt = itemView.findViewById(R.id.stationLocation);
             stationIdTxt = itemView.findViewById(R.id.stationId);
+            starIconCheckBox = itemView.findViewById(R.id.star_icon);
         }
     }
 }

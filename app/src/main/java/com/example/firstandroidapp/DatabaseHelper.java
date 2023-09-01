@@ -20,17 +20,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY, bikeId TEXT, wasPositive BOOLEAN, description TEXT)",
                 RatingsTable.tableName));
+        db.execSQL(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY, stationId TEXT",
+                LikedStationsTable.tableName));
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS ratings");
+        db.execSQL(String.format("DROP TABLE IF EXISTS %s", RatingsTable.tableName));
+        db.execSQL(String.format("DROP TABLE IF EXISTS %s", LikedStationsTable.tableName));
         onCreate(db);
     }
 
     public ArrayList<Rating> getAllRatings() {
         Cursor cursor = getReadableDatabase().query(
-                "ratings",
+                RatingsTable.tableName,
                 RatingsTable.projection,
                 null,
                 null,
@@ -82,8 +85,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void removeRating(Rating rating) {
-        getWritableDatabase().delete("ratings", "bikeId = ?", new String[]{rating.bikeId});
+        getWritableDatabase().delete(RatingsTable.tableName, "bikeId = ?", new String[]{rating.bikeId});
     }
+
+    public ArrayList<String> getLikedStationsIds() {
+        Cursor cursor = getReadableDatabase().query(
+                LikedStationsTable.tableName,
+                RatingsTable.projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        ArrayList<String> likedStationsIds = new ArrayList<>();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String stationId = cursor.getString(cursor.getColumnIndexOrThrow("stationId"));
+
+                likedStationsIds.add(stationId);
+            }
+            cursor.close();
+        }
+
+        return likedStationsIds;
+    }
+
+    public boolean addLikedStation(String stationId) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("stationId", stationId);
+        db.insert("ratings", null, values);
+        return true;
+    }
+
+    public void removeLikedStation(String stationId) {
+        getWritableDatabase().delete(LikedStationsTable.tableName, "stationId = ?", new String[]{stationId});
+    }
+}
+
+class LikedStationsTable {
+    public final static String tableName = "liked_stations";
+    public final static String[] projection = {
+            "id",
+            "stationId",
+    };
 }
 
 class RatingsTable {
