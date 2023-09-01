@@ -60,7 +60,7 @@ public class StationsViewPagerAdapter extends FragmentStateAdapter implements On
             likedStations.add(station);
         else {
             likedStations.remove(station);
-            stations.stream().filter(s ->)
+            allStationsAdapter.uncheckStarIconCheckBox(station.id);
         }
 
         likedStationsAdapter.setStations(likedStations);

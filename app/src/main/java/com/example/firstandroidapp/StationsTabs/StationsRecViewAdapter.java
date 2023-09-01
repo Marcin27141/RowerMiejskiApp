@@ -2,6 +2,7 @@ package com.example.firstandroidapp.StationsTabs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,14 @@ import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<OnStationLikedListener> onStationLikedListeners = new ArrayList<>();
     private ArrayList<WrmStation> stations = new ArrayList<>();
+    private ArrayList<ViewHolder> viewHolders = new ArrayList<>();
     private ArrayList<String> likedStationsIds = new ArrayList<>();
 
     public StationsRecViewAdapter(Context context) {
@@ -32,6 +35,11 @@ public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecView
 
     public void addOnStationLikedListener(OnStationLikedListener listener) {
         this.onStationLikedListeners.add(listener);
+    }
+
+    public void uncheckStarIconCheckBox(String stationId) {
+        Optional<ViewHolder> holder = viewHolders.stream().filter(h -> h.stationIdTxt.getText().toString().equals(stationId)).findFirst();
+        holder.ifPresent(holderValue -> holderValue.starIconCheckBox.setChecked(false));
     }
 
     @NonNull
@@ -71,6 +79,7 @@ public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecView
 
 
         holder.starIconCheckBox.setChecked(likedStationsIds.contains(holder.stationIdTxt.getText().toString()));
+        viewHolders.add(holder);
     }
 
     private void showChooseBikeActivity(int stationsPosition) {
