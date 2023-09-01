@@ -27,8 +27,9 @@ public class LikedStationsFragment extends Fragment {
     private SearchView searchView;
 
 
-    public LikedStationsFragment(Context context, ArrayList<WrmStation> likedStations) {
+    public LikedStationsFragment(Context context, StationsRecViewAdapter adapter, ArrayList<WrmStation> likedStations) {
         this.context = context;
+        this.adapter = adapter;
         this.likedStations = likedStations;
     }
     @Override
@@ -37,7 +38,6 @@ public class LikedStationsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_stations, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.stationsRecView);
-        adapter = new StationsRecViewAdapter(context);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 2));

@@ -25,8 +25,9 @@ public class AllStationsFragment extends Fragment {
     private SearchView searchView;
     private StationsRecViewAdapter adapter;
 
-    public AllStationsFragment(Context context, ArrayList<WrmStation> stationList) {
+    public AllStationsFragment(Context context, StationsRecViewAdapter adapter, ArrayList<WrmStation> stationList) {
         this.context = context;
+        this.adapter = adapter;
         this.stationList = stationList;
     }
 
@@ -37,8 +38,6 @@ public class AllStationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_all_stations, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.stationsRecView);
-        adapter = new StationsRecViewAdapter(context);
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         adapter.setStations(stationList);

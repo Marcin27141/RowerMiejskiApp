@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,15 +19,19 @@ import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
 
-
 public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecViewAdapter.ViewHolder> {
 
     private Context context;
+    private ArrayList<OnStationLikedListener> onStationLikedListeners = new ArrayList<>();
     private ArrayList<WrmStation> stations = new ArrayList<>();
     private ArrayList<String> likedStationsIds = new ArrayList<>();
 
     public StationsRecViewAdapter(Context context) {
         this.context = context;
+    }
+
+    public void addOnStationLikedListener(OnStationLikedListener listener) {
+        this.onStationLikedListeners.add(listener);
     }
 
     @NonNull
@@ -46,17 +49,26 @@ public class StationsRecViewAdapter extends RecyclerView.Adapter<StationsRecView
             showChooseBikeActivity(position);
         });
 
-        holder.starIconCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-                if (isChecked) {
-                    dbHelper.addLikedStation(holder.stationIdTxt.getText().toString());
+        holder.starIconCheckBox.setOnClickListener(v -> {
+            // you might keep a reference to the CheckBox to avoid this class cast
+            boolean isChecked = ((CheckBox)v).isChecked();
+
+                String stationId = holder.stationIdTxt.getText().toString();
+
+                try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+                    if (isChecked) {
+                        dbHelper.addLikedStation(stationId);
+                    }
+                    else
+                    {
+                        dbHelper.removeLikedStation(stationId);
+                    }
                 }
-                else
-                {
-                    dbHelper.removeLikedStation(holder.stationIdTxt.getText().toString());
-                }
-            }
+
+                for (OnStationLikedListener listener : onStationLikedListeners)
+                    listener.onStationLiked(stations.get(position), isChecked);
         });
+
 
         holder.starIconCheckBox.setChecked(likedStationsIds.contains(holder.stationIdTxt.getText().toString()));
     }
