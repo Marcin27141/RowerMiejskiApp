@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "wrm_app_database.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY, bikeId TEXT, wasPositive BOOLEAN, description TEXT)",
                 RatingsTable.tableName));
-        db.execSQL(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY, stationId TEXT",
+        db.execSQL(String.format("CREATE TABLE %s (id INTEGER PRIMARY KEY, stationId TEXT)",
                 LikedStationsTable.tableName));
     }
 
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put("bikeId", rating.bikeId);
             values.put("wasPositive", rating.wasPositive);
             values.put("description", rating.description);
-            db.insert("ratings", null, values);
+            db.insert(RatingsTable.tableName, null, values);
 
             db.setTransactionSuccessful();
             return true;
@@ -91,7 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<String> getLikedStationsIds() {
         Cursor cursor = getReadableDatabase().query(
                 LikedStationsTable.tableName,
-                RatingsTable.projection,
+                LikedStationsTable.projection,
                 null,
                 null,
                 null,
@@ -118,7 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("stationId", stationId);
-        db.insert("ratings", null, values);
+        db.insert(LikedStationsTable.tableName, null, values);
         return true;
     }
 

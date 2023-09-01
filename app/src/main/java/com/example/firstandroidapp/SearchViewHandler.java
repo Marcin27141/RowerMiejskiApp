@@ -11,8 +11,8 @@ public class SearchViewHandler<T> implements SearchView.OnQueryTextListener {
 
     private List<T> items;
     private BiPredicate<T, String> predicate;
-    private Consumer<List<T>> finishingFunction;
-    public SearchViewHandler(List<T> items, BiPredicate<T, String> predicate, Consumer<List<T>> finishingFunction) {
+    private Consumer<ArrayList<T>> finishingFunction;
+    public SearchViewHandler(List<T> items, BiPredicate<T, String> predicate, Consumer<ArrayList<T>> finishingFunction) {
         this.items = items;
         this.predicate = predicate;
         this.finishingFunction = finishingFunction;
@@ -30,7 +30,7 @@ public class SearchViewHandler<T> implements SearchView.OnQueryTextListener {
     }
 
     private void filterList(String text) {
-        List<T> filteredList = new ArrayList<>();
+        ArrayList<T> filteredList = new ArrayList<>();
         for (T item : items) {
             if (predicate.test(item, text)) {
                 filteredList.add(item);
