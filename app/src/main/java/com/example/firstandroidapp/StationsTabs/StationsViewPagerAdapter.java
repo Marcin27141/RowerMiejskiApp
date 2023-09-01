@@ -18,22 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StationsViewPagerAdapter extends FragmentStateAdapter implements OnStationLikedListener {
+public class StationsViewPagerAdapter extends FragmentStateAdapter {
 
     private Context context;
     private ArrayList<WrmStation> stations;
     private ArrayList<WrmStation> likedStations = new ArrayList<>();
-    private StationsRecViewAdapter allStationsAdapter, likedStationsAdapter;
 
     public StationsViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, Context context, ArrayList<WrmStation> stations) {
         super(fragmentActivity);
         this.context = context;
         this.stations = stations;
 
-        allStationsAdapter = new StationsRecViewAdapter(context);
-        allStationsAdapter.addOnStationLikedListener(this);
-        likedStationsAdapter = new StationsRecViewAdapter(context);
-        likedStationsAdapter.addOnStationLikedListener(this);
     }
 
     @NonNull
@@ -43,27 +38,14 @@ public class StationsViewPagerAdapter extends FragmentStateAdapter implements On
             try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
                 ArrayList<String> likedStationsIds = dbHelper.getLikedStationsIds();
                 likedStations = new ArrayList<>(stations.stream().filter(s -> likedStationsIds.contains(s.id)).collect(Collectors.toList()));
-                return new LikedStationsFragment(context, likedStationsAdapter, new ArrayList<>(likedStations));
+                return new LikedStationsFragment(context, new ArrayList<>(likedStations));
             }
         }
-        return new AllStationsFragment(context, allStationsAdapter, stations);
+        return new AllStationsFragment(context, stations);
     }
 
     @Override
     public int getItemCount() {
         return 2;
-    }
-
-    @Override
-    public void onStationLiked(WrmStation station, boolean isLiked) {
-        if (isLiked)
-            likedStations.add(station);
-        else {
-            likedStations.remove(station);
-            allStationsAdapter.uncheckStarIconCheckBox(station.id);
-        }
-
-        likedStationsAdapter.setStations(likedStations);
-        likedStationsAdapter.notifyDataSetChanged();
     }
 }

@@ -26,11 +26,24 @@ public class LikedStationsFragment extends Fragment {
     private StationsRecViewAdapter adapter;
     private SearchView searchView;
 
+    public LikedStationsFragment(){}
 
-    public LikedStationsFragment(Context context, StationsRecViewAdapter adapter, ArrayList<WrmStation> likedStations) {
+    public LikedStationsFragment(Context context, ArrayList<WrmStation> likedStations) {
         this.context = context;
-        this.adapter = adapter;
         this.likedStations = likedStations;
+        FragmentsAdapters adapters = FragmentsAdapters.getFragmentsAdapters(context,likedStations);
+        this.adapter = adapters.getLikedStationsAdapter();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            context = getActivity();
+            likedStations = (ArrayList<WrmStation>) savedInstanceState.getSerializable("liked_stations");
+            adapter = FragmentsAdapters.getFragmentsAdapters(context, likedStations).getLikedStationsAdapter();
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,5 +73,12 @@ public class LikedStationsFragment extends Fragment {
                         Toast.makeText(context, R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
                 }
         ));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable("liked_stations", likedStations);
     }
 }

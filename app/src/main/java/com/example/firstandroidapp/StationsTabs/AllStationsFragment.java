@@ -25,10 +25,25 @@ public class AllStationsFragment extends Fragment {
     private SearchView searchView;
     private StationsRecViewAdapter adapter;
 
-    public AllStationsFragment(Context context, StationsRecViewAdapter adapter, ArrayList<WrmStation> stationList) {
+    public AllStationsFragment(Context context, ArrayList<WrmStation> stationList) {
         this.context = context;
-        this.adapter = adapter;
         this.stationList = stationList;
+        FragmentsAdapters adapters = FragmentsAdapters.getFragmentsAdapters(context,stationList);
+        this.adapter = adapters.getAllStationsAdapter();
+    }
+
+    public AllStationsFragment(){}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Check if savedInstanceState is not null, indicating a configuration change
+        if (savedInstanceState != null) {
+            context = getActivity();
+            stationList = (ArrayList<WrmStation>) savedInstanceState.getSerializable("stations");
+            adapter = FragmentsAdapters.getFragmentsAdapters(context, stationList).getAllStationsAdapter();
+        }
     }
 
     @Override
@@ -59,5 +74,12 @@ public class AllStationsFragment extends Fragment {
                         Toast.makeText(context, R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
                 }
         ));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable("stations", stationList);
     }
 }
