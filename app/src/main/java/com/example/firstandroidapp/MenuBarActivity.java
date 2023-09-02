@@ -7,6 +7,9 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import java.util.Locale;
 
 abstract class MenuBarActivity extends AppCompatActivity {
     private static String activeLanguage = "en";
@@ -14,6 +17,7 @@ abstract class MenuBarActivity extends AppCompatActivity {
     private final static int RELOAD_TIME = 4000;
     private MenuItem lightModeItem, languageItem;
     private Menu menu;
+    private static boolean hasBeenInitialized = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -21,6 +25,11 @@ abstract class MenuBarActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        if (!hasBeenInitialized) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            activeLanguage = Locale.getDefault().getLanguage();
+            hasBeenInitialized = true;
+        }
 
         return true;
     }
@@ -28,6 +37,8 @@ abstract class MenuBarActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
         this.lightModeItem = menu.findItem(R.id.light_mode_menu);
+        LightModeHelper.setLightModeIcon(lightModeItem);
+
         this.languageItem = menu.findItem(R.id.language_menu);
         if (disableIcons) {
             setMenuIconsEnabled(false);
@@ -51,7 +62,8 @@ abstract class MenuBarActivity extends AppCompatActivity {
 
         if (id == R.id.light_mode_menu) {
             disableIcons = true;
-            LightModeHelper.changeLightMode();
+            LightModeHelper.changeLightMode(lightModeItem);
+            LightModeHelper.setLightModeIcon(lightModeItem);
             return true;
         } else if (id == R.id.language_menu) {
             activeLanguage = (activeLanguage.equals("en")) ? "pl" : "en";

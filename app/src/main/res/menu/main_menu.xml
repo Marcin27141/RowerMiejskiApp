@@ -12,7 +12,7 @@
     <item
         android:title="@string/light_mode_menu_title"
         android:id="@+id/light_mode_menu"
-        android:icon="@drawable/ic_light_mode"
+        android:icon="@drawable/ic_sun"
         app:iconTint="?attr/menuIconTint"
         app:showAsAction="ifRoom"/>
 
