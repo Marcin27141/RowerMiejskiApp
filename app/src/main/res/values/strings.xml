@@ -25,4 +25,5 @@
     <string name="no_description">Brak opisu</string>
     <string name="all_stations_txt">Wszystkie</string>
     <string name="liked_stations_txt">Polubione</string>
+    <string name="description">Opis</string>
 </resources>

@@ -26,4 +26,5 @@
     <string name="no_description">No description provided</string>
     <string name="all_stations_txt">All</string>
     <string name="liked_stations_txt">Liked</string>
+    <string name="description">Description</string>
 </resources>

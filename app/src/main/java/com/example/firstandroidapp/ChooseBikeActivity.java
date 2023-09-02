@@ -191,7 +191,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
         setDialogViewContent(clickedBikeId, dialogView);
 
         builder.setView(dialogView)
-                .setTitle("Description")
+                .setTitle(R.string.description)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
