@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="CustomThemeAttributes">
         <attr name="textBtnTint" format="color" />
+        <attr name="menuIconTint" format="color" />
+        <attr name="iconTint" format="color" />
     </declare-styleable>
 </resources>

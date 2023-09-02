@@ -1,10 +1,6 @@
 package com.example.firstandroidapp;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,19 +11,19 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 
+import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,7 +36,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private ListView bikesList;
     private MaterialButtonToggleGroup buttonToggleGroup;
     private SearchView searchView;
-    private ArrayList<Rating> ratings;
+    private ArrayList<BikeRating> ratings;
     private List<String> stationBikes = new ArrayList<>();
     private List<String> displayedBikes = new ArrayList<>();
     private List<String> positiveBikes, negativeBikes, ungradedBikes;
@@ -58,20 +54,31 @@ public class ChooseBikeActivity extends MenuBarActivity {
         displayedBikes = new ArrayList<>(stationBikes);
 
         bikesList = findViewById(R.id.bikesList);
-        bikesAdapter = new ArrayAdapter<>(
-                this,
-                R.layout.bikes_list_item,
-                R.id.bikeNumber,
-                displayedBikes
-        );
-        bikesList.setAdapter(bikesAdapter);
+        setUpBikesListAdapter();
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true); // Enable the up button
-        }
+        setUpReturnMenuButton();
 
         buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
+        setUpButtonToggleGroupCheckedListener();
+
+        ratingActivityResultLauncher = getRatingActivityResultLauncher();
+
+        searchView = findViewById(R.id.searchView);
+        setUpSearchViewListener();
+    }
+
+    @NonNull
+    private ActivityResultLauncher<Intent> getRatingActivityResultLauncher() {
+        return registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        resetGradingGroups("Rating successfully added");
+                    }
+                });
+    }
+
+    private void setUpButtonToggleGroupCheckedListener() {
         buttonToggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked && checkedId == R.id.goodButton) {
                 displayedBikes = positiveBikes;
@@ -82,18 +89,23 @@ public class ChooseBikeActivity extends MenuBarActivity {
             }
             setBikesForAdapter(displayedBikes);
         });
+    }
 
-        ratingActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        resetGradingGroups("Rating successfully added");
-                    }
-                });
+    private void setUpReturnMenuButton() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
-        buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
-        searchView = findViewById(R.id.searchView);
-        setUpSearchViewListener();
+    private void setUpBikesListAdapter() {
+        bikesAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.bikes_list_item,
+                R.id.bikeNumber,
+                displayedBikes
+        );
+        bikesList.setAdapter(bikesAdapter);
     }
 
     private void resetGradingGroups(String toastMessage) {
@@ -104,7 +116,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     }
 
     private void setUpSearchViewListener() {
-        searchView.setOnQueryTextListener(new SearchViewHandler<String>(
+        searchView.setOnQueryTextListener(new SearchViewHandler<>(
                 stationBikes,
                 String::contains,
                 filtered -> {
@@ -136,55 +148,74 @@ public class ChooseBikeActivity extends MenuBarActivity {
         if (position != ListView.INVALID_POSITION) {
             String clickedBikeId = displayedBikes.get(position);
             PopupMenu popupMenu = new PopupMenu(this, view);
-            if (ratings.stream().anyMatch(r -> r.bikeId.equals(clickedBikeId))) {
-                popupMenu.inflate(R.menu.bike_list_graded_popup_menu);
-
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.changeRatingItem) {
-                        Intent intent = new Intent(this, RateBikeActivity.class);
-                        intent.putExtra("BIKE_ID", clickedBikeId);
-                        ratingActivityResultLauncher.launch(intent);
-                    } else if (item.getItemId() == R.id.removeRatingItem) {
-                        Optional<Rating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
-                        rating.ifPresent(value -> new DatabaseHelper(this).removeRating(value));
-                        resetGradingGroups("Rating successfully deleted");
-                    } else if (item.getItemId() == R.id.descriptionItem) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
-                        LayoutInflater inflater = getLayoutInflater();
-                        View dialogView = inflater.inflate(R.layout.description_dialog, null);
-                        TextView dialogTextView = dialogView.findViewById(R.id.descriptionDialogTxt);
-                        Optional<Rating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
-                        boolean descriptionProvided = rating.isPresent() && !rating.get().description.isEmpty();
-                        String descriptionTxt = descriptionProvided ? rating.get().description : getResources().getString(R.string.no_description);
-                        dialogTextView.setText(descriptionTxt);
-
-                        builder.setView(dialogView)
-                                .setTitle("Description")
-                                .setPositiveButton("OK", (dialog, which) -> {
-                                    dialog.dismiss();
-                                });
-
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                    }
-                    return true;
-                });
-                popupMenu.show();
-            } else {
-                popupMenu.inflate(R.menu.bike_list_popup_menu);
-
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.addRatingItem) {
-                        Intent intent = new Intent(this, RateBikeActivity.class);
-                        intent.putExtra("BIKE_ID", clickedBikeId);
-                        ratingActivityResultLauncher.launch(intent);
-                    }
-                    return true;
-                });
-                popupMenu.show();
-            }
-
+            configurePopupMenu(clickedBikeId, popupMenu);
+            popupMenu.show();
         }
+    }
+
+    private void configurePopupMenu(String clickedBikeId, PopupMenu popupMenu) {
+        if (ratings.stream().anyMatch(r -> r.bikeId.equals(clickedBikeId))) {
+            popupMenu.inflate(R.menu.bike_list_graded_popup_menu);
+            setUpRatedBikeMenuClickedListener(clickedBikeId, popupMenu);
+        } else {
+            popupMenu.inflate(R.menu.bike_list_popup_menu);
+            setUpUnratedBikeMenuClickedListener(clickedBikeId, popupMenu);
+        }
+    }
+
+    private void setUpUnratedBikeMenuClickedListener(String clickedBikeId, PopupMenu popupMenu) {
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.addRatingItem) {
+                launchRatingActivity(clickedBikeId);
+            }
+            return true;
+        });
+    }
+
+    private void setUpRatedBikeMenuClickedListener(String clickedBikeId, PopupMenu popupMenu) {
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.changeRatingItem)
+                launchRatingActivity(clickedBikeId);
+            else if (item.getItemId() == R.id.removeRatingItem)
+                removeBikeRating(clickedBikeId);
+            else if (item.getItemId() == R.id.descriptionItem)
+                showRatingDescription(clickedBikeId);
+            return true;
+        });
+    }
+
+    private void showRatingDescription(String clickedBikeId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.description_dialog, null);
+        setDialogViewContent(clickedBikeId, dialogView);
+
+        builder.setView(dialogView)
+                .setTitle("Description")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void setDialogViewContent(String clickedBikeId, View dialogView) {
+        TextView dialogTextView = dialogView.findViewById(R.id.descriptionDialogTxt);
+        Optional<BikeRating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
+        boolean descriptionProvided = rating.isPresent() && !rating.get().description.isEmpty();
+        String descriptionTxt = descriptionProvided ? rating.get().description : getResources().getString(R.string.no_description);
+        dialogTextView.setText(descriptionTxt);
+    }
+
+    private void removeBikeRating(String clickedBikeId) {
+        Optional<BikeRating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
+        rating.ifPresent(value -> new DatabaseHelper(this).removeRating(value));
+        resetGradingGroups("Rating successfully deleted");
+    }
+
+    private void launchRatingActivity(String clickedBikeId) {
+        Intent intent = new Intent(this, RateBikeActivity.class);
+        intent.putExtra("BIKE_ID", clickedBikeId);
+        ratingActivityResultLauncher.launch(intent);
     }
 
     @Override

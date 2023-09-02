@@ -10,8 +10,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -24,7 +27,7 @@ public class RateBikeActivity extends MenuBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.avtivity_add_rating);
+        setContentView(R.layout.activity_add_rating);
 
         bikeId = getIntent().getStringExtra("BIKE_ID");
         TextView bikeIdText = findViewById(R.id.bikeId);
@@ -32,22 +35,28 @@ public class RateBikeActivity extends MenuBarActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true); // Enable the up button
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     public void onSubmitRating(View view) {
+        BikeRating rating = getRating();
+        addRating(rating);
+    }
+
+    @NonNull
+    private BikeRating getRating() {
         MaterialButtonToggleGroup buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
         TextInputLayout description = findViewById(R.id.descriptionBox);
+
         boolean wasPositive = buttonToggleGroup.getCheckedButtonId() == R.id.goodButton;
         EditText descriptionEditText = description.getEditText();
         String descriptionValue = descriptionEditText == null || descriptionEditText.getText() == null ? "" : descriptionEditText.getText().toString();
 
-        Rating rating = new Rating(bikeId, wasPositive, descriptionValue);
-        addRating(rating);
+        return new BikeRating(bikeId, wasPositive, descriptionValue);
     }
 
-    private void addRating(Rating rating) {
+    private void addRating(BikeRating rating) {
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -60,12 +69,16 @@ public class RateBikeActivity extends MenuBarActivity {
             }
             handler.post(() -> {
                 progressBar.setVisibility(View.INVISIBLE);
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("RATING_ADDED", true);
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                finishRatingActivity();
             });
         });
+    }
+
+    private void finishRatingActivity() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("RATING_ADDED", true);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override

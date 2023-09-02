@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!--android:theme="@style/Theme.AppCompat.Light"-->
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -35,14 +33,6 @@
         <activity
             android:name=".RateBikeActivity"
             android:parentActivityName=".ChooseBikeActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".RegisterResultsActivity"
             android:exported="true">
         </activity>
     </application>

@@ -12,7 +12,7 @@
         android:layout_height="60dp"
         android:src="@drawable/ic_bike"
         android:layout_margin="10dp"
-        app:tint="?android:iconTint"/>
+        app:tint="?attr/iconTint"/>
 
     <TextView
         android:layout_width="120dp"
@@ -35,6 +35,6 @@
         android:onClick="onBikeListMoreIconClicked"
         android:layout_toEndOf="@id/bikeNumber"
         android:layout_alignParentEnd="true"
-        app:tint="?android:iconTint"/>
+        app:tint="?attr/iconTint"/>
 
 </RelativeLayout>

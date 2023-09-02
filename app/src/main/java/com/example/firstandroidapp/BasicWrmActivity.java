@@ -27,7 +27,7 @@ public class BasicWrmActivity extends MenuBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_basic_wrm);
+        setContentView(R.layout.activity_stations_list);
 
         WrmHelper.getWrmStationsList(generatedList -> {
             ProgressBar progressBar = findViewById(R.id.progressBar);

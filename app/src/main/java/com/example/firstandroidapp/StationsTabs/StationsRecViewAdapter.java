@@ -2,7 +2,6 @@ package com.example.firstandroidapp.StationsTabs;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstandroidapp.ChooseBikeActivity;
-import com.example.firstandroidapp.DatabaseHelper;
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 

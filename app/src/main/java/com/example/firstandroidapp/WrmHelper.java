@@ -29,24 +29,28 @@ public class WrmHelper {
 
         executor.execute(() -> {
             try {
-                Document doc = Jsoup.connect("https://wroclawskirower.pl/mapa-stacji/").get();
-                Element divContainer = doc.getElementsByClass("text station_list col-xs-12").first();
-                Element table = divContainer.select("table").first();
-
-                if (table != null) {
-                    Elements rows = table.select("tr");
-                    for (int i = 1; i < rows.size() - 1; i++) {
-                        Element row = rows.get(i);
-                        Elements cells = row.select("td"); // Select all cells in the row
-                        result.add(generateWrmStation(cells));
-                    }
-                }
+                populateStationsList(result);
             } catch (IOException ignored) {
             }
             handler.post(() -> {
                 postHandler.accept(result);
             });
         });
+    }
+
+    private static void populateStationsList(ArrayList<WrmStation> result) throws IOException {
+        Document doc = Jsoup.connect("https://wroclawskirower.pl/mapa-stacji/").get();
+        Element divContainer = doc.getElementsByClass("text station_list col-xs-12").first();
+        Element table = divContainer.select("table").first();
+
+        if (table != null) {
+            Elements rows = table.select("tr");
+            for (int i = 1; i < rows.size() - 1; i++) {
+                Element row = rows.get(i);
+                Elements cells = row.select("td");
+                result.add(generateWrmStation(cells));
+            }
+        }
     }
 
     private static WrmStation generateWrmStation(Elements cells) {

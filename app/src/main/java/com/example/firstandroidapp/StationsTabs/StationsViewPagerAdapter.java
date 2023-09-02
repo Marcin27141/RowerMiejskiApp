@@ -1,22 +1,15 @@
 package com.example.firstandroidapp.StationsTabs;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.firstandroidapp.DatabaseHelper;
-import com.example.firstandroidapp.StationsTabs.AllStationsFragment;
-import com.example.firstandroidapp.StationsTabs.LikedStationsFragment;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class StationsViewPagerAdapter extends FragmentStateAdapter {
 

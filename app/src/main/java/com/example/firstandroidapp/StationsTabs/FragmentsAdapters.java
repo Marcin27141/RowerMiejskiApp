@@ -2,7 +2,7 @@ package com.example.firstandroidapp.StationsTabs;
 
 import android.content.Context;
 
-import com.example.firstandroidapp.DatabaseHelper;
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;

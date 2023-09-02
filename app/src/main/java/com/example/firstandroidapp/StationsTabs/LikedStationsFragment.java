@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.firstandroidapp.DatabaseHelper;
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.SearchViewHandler;
 import com.example.firstandroidapp.WrmModel.WrmStation;
