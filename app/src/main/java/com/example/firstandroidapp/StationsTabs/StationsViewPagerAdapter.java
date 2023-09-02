@@ -14,23 +14,20 @@ import java.util.ArrayList;
 public class StationsViewPagerAdapter extends FragmentStateAdapter {
 
     private Context context;
-    private ArrayList<WrmStation> stations;
-    private ArrayList<WrmStation> likedStations = new ArrayList<>();
 
     public StationsViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, Context context, ArrayList<WrmStation> stations) {
         super(fragmentActivity);
         this.context = context;
-        this.stations = stations;
-
+        FragmentsHelper.createFragmentsHelper(context, stations);
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         if (position == 1) {
-            return new LikedStationsFragment(context, stations);
+            return new LikedStationsFragment();
         }
-        return new AllStationsFragment(context, stations);
+        return new AllStationsFragment();
     }
 
     @Override

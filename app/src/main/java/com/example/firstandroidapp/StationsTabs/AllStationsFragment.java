@@ -21,29 +21,16 @@ import java.util.ArrayList;
 
 public class AllStationsFragment extends Fragment {
     private Context context;
-    private ArrayList<WrmStation> stationList;
     private SearchView searchView;
+    private FragmentsHelper fragmentsHelper;
     private StationsRecViewAdapter adapter;
-
-    public AllStationsFragment(Context context, ArrayList<WrmStation> stationList) {
-        this.context = context;
-        this.stationList = stationList;
-        FragmentsAdapters adapters = FragmentsAdapters.getFragmentsAdapters(context,stationList);
-        this.adapter = adapters.getAllStationsAdapter();
-    }
-
-    public AllStationsFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Check if savedInstanceState is not null, indicating a configuration change
-        if (savedInstanceState != null) {
-            context = getActivity();
-            stationList = (ArrayList<WrmStation>) savedInstanceState.getSerializable("stations");
-            adapter = FragmentsAdapters.getFragmentsAdapters(context, stationList).getAllStationsAdapter();
-        }
+        fragmentsHelper = FragmentsHelper.getFragmentsHelper();
+        context = getActivity();
+        adapter = fragmentsHelper.getAllStationsAdapter();
     }
 
     @Override
@@ -55,7 +42,7 @@ public class AllStationsFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.stationsRecView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
-        adapter.setStations(stationList);
+        adapter.setStations(fragmentsHelper.getStations());
 
         searchView = view.findViewById(R.id.searchView);
         setUpSearchViewListener();
@@ -66,7 +53,7 @@ public class AllStationsFragment extends Fragment {
 
     private void setUpSearchViewListener() {
         searchView.setOnQueryTextListener(new SearchViewHandler<WrmStation>(
-                stationList,
+                fragmentsHelper.getStations(),
                 (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
                 filtered -> {
                     adapter.setStations(filtered);
@@ -76,10 +63,4 @@ public class AllStationsFragment extends Fragment {
         ));
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putSerializable("stations", stationList);
-    }
 }

@@ -8,19 +8,23 @@ import com.example.firstandroidapp.WrmModel.WrmStation;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class FragmentsAdapters  implements OnStationLikedListener {
-    private static FragmentsAdapters fragmentsAdapters;
+public class FragmentsHelper implements OnStationLikedListener {
+    private static FragmentsHelper fragmentsHelper;
 
     private ArrayList<WrmStation> stations = new ArrayList<>();
     private ArrayList<WrmStation> likedStations;
     private StationsRecViewAdapter allStationsAdapter, likedStationsAdapter;
 
-    public static FragmentsAdapters getFragmentsAdapters(Context context, ArrayList<WrmStation> stations) {
-        if (fragmentsAdapters == null)
-            fragmentsAdapters = new FragmentsAdapters(context, stations);
-        return fragmentsAdapters;
+    public static FragmentsHelper createFragmentsHelper(Context context, ArrayList<WrmStation> stations) {
+        if (fragmentsHelper == null)
+            fragmentsHelper = new FragmentsHelper(context, stations);
+        return fragmentsHelper;
     }
-    private FragmentsAdapters(Context context, ArrayList<WrmStation> stations) {
+
+    public static FragmentsHelper getFragmentsHelper() {
+        return fragmentsHelper;
+    }
+    private FragmentsHelper(Context context, ArrayList<WrmStation> stations) {
         this.stations = stations;
 
         ArrayList<String> likedStationsIds = new DatabaseHelper(context).getLikedStationsIds();
@@ -39,6 +43,14 @@ public class FragmentsAdapters  implements OnStationLikedListener {
 
     public StationsRecViewAdapter getLikedStationsAdapter() {
         return likedStationsAdapter;
+    }
+
+    public ArrayList<WrmStation> getStations() {
+        return stations;
+    }
+
+    public ArrayList<WrmStation> getLikedStations() {
+        return likedStations;
     }
 
     @Override
