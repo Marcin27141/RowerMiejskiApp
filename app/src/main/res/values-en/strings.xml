@@ -24,4 +24,6 @@
     <string name="no_stations_found_msg">No stations found</string>
     <string name="no_bikes_found_msg">No bikes found</string>
     <string name="no_description">No description provided</string>
+    <string name="all_stations_txt">All</string>
+    <string name="liked_stations_txt">Liked</string>
 </resources>
