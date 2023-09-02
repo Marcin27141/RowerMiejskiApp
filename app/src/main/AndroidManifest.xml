@@ -17,7 +17,7 @@
         android:theme="@style/Theme.FirstAndroidApp"
         tools:targetApi="31">
         <activity
-            android:name=".BasicWrmActivity"
+            android:name=".ActivityStationsList"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".ChooseBikeActivity"
-            android:parentActivityName=".BasicWrmActivity"
+            android:parentActivityName=".ActivityStationsList"
             android:exported="true">
         </activity>
         <activity

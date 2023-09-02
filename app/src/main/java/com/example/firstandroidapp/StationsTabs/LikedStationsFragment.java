@@ -82,7 +82,7 @@ public class LikedStationsFragment extends Fragment {
                 (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
                 filtered -> {
                     adapter.setStations(filtered);
-                    if (filtered.isEmpty())
+                    if (filtered.isEmpty() && !likedStations.isEmpty())
                         Toast.makeText(context, R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
                 }
         ));

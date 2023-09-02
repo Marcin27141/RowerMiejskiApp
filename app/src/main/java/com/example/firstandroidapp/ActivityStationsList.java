@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.firstandroidapp.StationsTabs.StationsOnPageChangeCallback;
@@ -15,7 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
 
-public class BasicWrmActivity extends MenuBarActivity {
+public class ActivityStationsList extends MenuBarActivity {
 
     private ArrayList<WrmStation> wrmStationsList = new ArrayList<>();
     private ArrayList<WrmStation> displayedStations = new ArrayList<>();

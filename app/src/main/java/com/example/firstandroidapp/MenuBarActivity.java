@@ -17,8 +17,6 @@ abstract class MenuBarActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
 
         lightModeItem = menu.findItem(R.id.light_mode_menu);
-        LightModeHelper.setLightModeIcon(lightModeItem);
-
 
         return true;
     }
@@ -27,7 +25,7 @@ abstract class MenuBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.light_mode_menu) {
-            LightModeHelper.changeLightMode(lightModeItem);
+            LightModeHelper.changeLightMode();
             return true;
         } else if (id == R.id.language_menu) {
             activeLanguage = (activeLanguage.equals("en")) ? "pl" : "en";

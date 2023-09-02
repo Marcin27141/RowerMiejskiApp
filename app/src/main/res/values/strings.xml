@@ -7,7 +7,7 @@
     <string name="email_result">Email</string>
     <string name="admin_radio_btn">Admin</string>
     <string name="user_radio_btn">Użytkownik</string>
-    <string name="light_mode_menu_title">Ustawienia</string>
+    <string name="light_mode_menu_title">Kolory aplikacji</string>
     <string name="language_menu_title">Język</string>
     <string name="search_incentive">Szukaj...</string>
     <string name="bike_id_placeholder">Bike Id</string>
@@ -23,6 +23,4 @@
     <string name="no_stations_found_msg">Nie znaleziono żadnych stacji</string>
     <string name="no_bikes_found_msg">Nie znaleziono żadnych rowerów</string>
     <string name="no_description">Brak opisu</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
