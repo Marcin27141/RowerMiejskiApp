@@ -26,4 +26,6 @@
     <string name="all_stations_txt">Wszystkie</string>
     <string name="liked_stations_txt">Polubione</string>
     <string name="description">Opis</string>
+    <string name="rating_added_info">Ocena zostła dodana</string>
+    <string name="rating_deleted_info">Ocena została usunięta</string>
 </resources>

@@ -54,4 +54,6 @@ public class ActivityStationsList extends MenuBarActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable("STATIONS_LIST", wrmStationsList);
     }
+
+
 }

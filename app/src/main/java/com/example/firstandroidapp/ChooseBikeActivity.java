@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
@@ -40,6 +41,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private List<String> stationBikes = new ArrayList<>();
     private List<String> displayedBikes = new ArrayList<>();
     private List<String> positiveBikes, negativeBikes, ungradedBikes;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -65,6 +67,11 @@ public class ChooseBikeActivity extends MenuBarActivity {
 
         searchView = findViewById(R.id.searchView);
         setUpSearchViewListener();
+
+        swipeRefreshLayout = findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+
+        });
     }
 
     @NonNull
@@ -73,7 +80,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        resetGradingGroups("Rating successfully added");
+                        resetGradingGroups(getResources().getString(R.string.rating_added_info));
                     }
                 });
     }
@@ -209,7 +216,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private void removeBikeRating(String clickedBikeId) {
         Optional<BikeRating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
         rating.ifPresent(value -> new DatabaseHelper(this).removeRating(value));
-        resetGradingGroups("Rating successfully deleted");
+        resetGradingGroups(getResources().getString(R.string.rating_deleted_info));
     }
 
     private void launchRatingActivity(String clickedBikeId) {

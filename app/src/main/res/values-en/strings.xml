@@ -27,4 +27,6 @@
     <string name="all_stations_txt">All</string>
     <string name="liked_stations_txt">Liked</string>
     <string name="description">Description</string>
+    <string name="rating_added_info">Rating successfully added</string>
+    <string name="rating_deleted_info">Rating successfully deleted</string>
 </resources>
