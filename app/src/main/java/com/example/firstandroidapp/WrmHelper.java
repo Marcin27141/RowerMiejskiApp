@@ -1,8 +1,10 @@
 package com.example.firstandroidapp;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.WrmModel.Location;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class WrmHelper {
     private static ArrayList<WrmStation> _wrmStationsList = new ArrayList<>();
@@ -42,6 +45,19 @@ public class WrmHelper {
     public static ArrayList<WrmStation> getWrmStations() {
         return _wrmStationsList;
     }
+    public static ArrayList<WrmStation> getLikedWrmStations(Context context) {
+        return getLikedWrmStations(context, _wrmStationsList);
+    }
+
+    public static ArrayList<WrmStation> getLikedWrmStations(Context context, ArrayList<WrmStation> stations) {
+        try {
+            ArrayList<String> liked = new DatabaseHelper(context).getLikedStationsIds();
+            return stations.stream().filter(s -> liked.contains(s.id)).collect(Collectors.toCollection(ArrayList::new));
+        } catch (Exception ignored) {
+            return new ArrayList<>();
+        }
+    }
+
 
     private static void populateStationsList(ArrayList<WrmStation> result) throws IOException {
         Document doc = Jsoup.connect("https://wroclawskirower.pl/mapa-stacji/").get();

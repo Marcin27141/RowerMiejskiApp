@@ -12,9 +12,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.firstandroidapp.StationsTabs.StationsOnPageChangeCallback;
-import com.example.firstandroidapp.StationsTabs.StationsTabSelectedListener;
-import com.example.firstandroidapp.StationsTabs.StationsViewPagerAdapter;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -54,7 +51,7 @@ public class ActivityStationsList extends MenuBarActivity {
     }
 
     private void setUpViewPager() {
-        PagerAdapter adapter = new PagerAdapter(this);
+        PagerAdapter adapter = new PagerAdapter(this, wrmStationsList);
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(adapter);
 
@@ -73,17 +70,19 @@ public class ActivityStationsList extends MenuBarActivity {
 
     static class PagerAdapter extends FragmentStateAdapter {
         private final int PAGE_COUNT = 2;
+        private final ArrayList<WrmStation> wrmStationsList;
 
-        public PagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        public PagerAdapter(@NonNull FragmentActivity fragmentActivity, ArrayList<WrmStation> wrmStationsList) {
             super(fragmentActivity);
+            this.wrmStationsList = wrmStationsList;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
             if (position == 0)
-                return new AllStationsFragmentTest();
-            return new LikedStationsFragmentTest();
+                return new AllStationsFragmentTest(wrmStationsList);
+            return new LikedStationsFragmentTest(wrmStationsList);
         }
 
         @Override

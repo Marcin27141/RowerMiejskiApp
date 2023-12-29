@@ -26,7 +26,7 @@ abstract class MenuBarActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         if (!hasBeenInitialized) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             activeLanguage = Locale.getDefault().getLanguage();
             hasBeenInitialized = true;
         }

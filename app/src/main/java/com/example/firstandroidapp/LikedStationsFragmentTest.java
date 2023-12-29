@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
@@ -46,7 +47,7 @@ public class LikedStationsFragmentTest extends Fragment {
     }
 
     public LikedStationsFragmentTest() {
-
+        this.stations = WrmHelper.getWrmStations();
     }
 
 
@@ -64,17 +65,16 @@ public class LikedStationsFragmentTest extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_liked_stations_test, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.stationsRecViewTest);
 
-        adapter = new TestStationsRecViewAdapter(requireContext(), WrmHelper.getWrmStations());
+        adapter = new TestStationsRecViewAdapter(requireContext(), stations);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
 
         searchView = view.findViewById(R.id.searchView);
-        //setUpSearchViewListener();
+        setUpSearchViewListener(searchView);
         searchView.clearFocus();
 
         getParentFragmentManager().setFragmentResultListener("LikedListChanged", getViewLifecycleOwner(), (requestKey, bundle) -> {
@@ -84,109 +84,41 @@ public class LikedStationsFragmentTest extends Fragment {
         return view;
     }
 
-    private ArrayList<WrmStation> getLikedStations(ArrayList<WrmStation> stations, ArrayList<String> likedStationsIds) {
-        ArrayList<WrmStation> filteredStations = new ArrayList<>();
-
-        for (WrmStation station : stations) {
-            if (likedStationsIds.contains(station.id)) {
-                filteredStations.add(station);
-            }
-        }
-
-        return filteredStations;
+    private void setUpSearchViewListener(SearchView searchView) {
+        ArrayList<WrmStation> likedStations = WrmHelper.getLikedWrmStations(requireContext());
+        searchView.setOnQueryTextListener(new SearchViewHandler<>(
+                likedStations,
+                (station, text) -> (station.id.contains(text) || station.location.name.toLowerCase().contains(text.toLowerCase())),
+                filtered -> {
+                    adapter.updateList(filtered);
+                    if (filtered.isEmpty() && !likedStations.isEmpty())
+                        Toast.makeText(requireContext(), R.string.no_stations_found_msg, Toast.LENGTH_LONG).show();
+                }
+        ));
     }
 
-    class TestStationsRecViewAdapter extends RecyclerView.Adapter<TestStationsRecViewAdapter.ViewHolder> {
-
-        private Context context;
+    class TestStationsRecViewAdapter extends StationsListAdapter {
         private ArrayList<WrmStation> allStations;
-        private ArrayList<WrmStation> likedStations;
 
         public TestStationsRecViewAdapter(Context context, ArrayList<WrmStation> stations) {
-            this.context = context;
+            super(context, WrmHelper.getLikedWrmStations(context, stations));
             this.allStations = stations;
-            this.likedStations = getLikedStations(allStations);
-        }
-
-        private ArrayList<WrmStation> getLikedStations(ArrayList<WrmStation> stations) {
-            ArrayList<String> liked = new DatabaseHelper(context).getLikedStationsIds();
-            return stations.stream().filter(s -> liked.contains(s.id)).collect(Collectors.toCollection(ArrayList::new));
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.station_card_item, parent, false);
-            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.stationLocationTxt.setText(likedStations.get(position).location.name);
-            holder.stationIdTxt.setText((likedStations.get(position).id));
-            holder.parent.setOnClickListener(view -> {
-                showChooseBikeActivity(position);
-            });
-
-            holder.starIconCheckBox.setOnClickListener(v -> {
-                boolean isChecked = ((CheckBox)v).isChecked();
-
-                String stationId = holder.stationIdTxt.getText().toString();
-
-                try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-                    if (isChecked) {
-                        dbHelper.addLikedStation(stationId);
-                    }
-                    else
-                    {
-                        dbHelper.removeLikedStation(stationId);
-                    }
-                }
-
-                getParentFragmentManager().setFragmentResult("StationUnliked", Bundle.EMPTY);
-                updateList();
-
-                //this.likedStations = getLikedStations(wrmList, new DatabaseHelper(requireContext()).getLikedStationsIds())
-
-//                for (OnStationLikedListener listener : onStationLikedListeners)
-//                    listener.onStationLiked(this, stations.get(position), isChecked);
-            });
-
-
-            holder.starIconCheckBox.setChecked(true);
-        }
-
-        private void showChooseBikeActivity(int stationsPosition) {
-            Intent intent = new Intent(context, ChooseBikeActivity.class);
-            intent.putExtra("SERIALIZED_STATION", likedStations.get(stationsPosition));
-            context.startActivity(intent);
+        void onLikedListChanged() {
+            getParentFragmentManager().setFragmentResult("StationUnliked", Bundle.EMPTY);
         }
 
         @Override
-        public int getItemCount() {
-            return likedStations.size();
+        boolean isStationLiked(WrmStation station) {
+            return true;
         }
 
+        @Override
         public void updateList() {
-            this.likedStations = getLikedStations(allStations);;
+            this.listItems = WrmHelper.getLikedWrmStations(context, allStations);
             notifyDataSetChanged();
         }
-
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            private final CardView parent;
-            private final TextView stationLocationTxt, stationIdTxt;
-            private final CheckBox starIconCheckBox;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                parent = itemView.findViewById(R.id.parent);
-                stationLocationTxt = itemView.findViewById(R.id.stationLocation);
-                stationIdTxt = itemView.findViewById(R.id.stationId);
-                starIconCheckBox = itemView.findViewById(R.id.star_icon);
-            }
-        }
     }
-
 }
