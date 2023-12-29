@@ -12,16 +12,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class WrmHelper {
-    public static void getWrmStationsList(Consumer<ArrayList<WrmStation>> postHandler) {
+    private static ArrayList<WrmStation> _wrmStationsList = new ArrayList<>();
+
+    public static void loadWrmStationsList(Consumer<ArrayList<WrmStation>> postHandler) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -30,12 +30,17 @@ public class WrmHelper {
         executor.execute(() -> {
             try {
                 populateStationsList(result);
+                _wrmStationsList = result;
             } catch (IOException ignored) {
             }
             handler.post(() -> {
                 postHandler.accept(result);
             });
         });
+    }
+
+    public static ArrayList<WrmStation> getWrmStations() {
+        return _wrmStationsList;
     }
 
     private static void populateStationsList(ArrayList<WrmStation> result) throws IOException {

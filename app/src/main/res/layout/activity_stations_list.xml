@@ -16,29 +16,55 @@
         android:layout_marginTop="50dp"
         android:visibility="visible"/>
 
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tab_layout"
-        android:visibility="invisible"
-        app:tabTextAppearance="?android:textAppearanceLarge"
-        app:tabSelectedTextColor="?android:colorPressedHighlight">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/all_stations_txt"/>
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/liked_stations_txt"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager"
-        android:layout_below="@id/tab_layout"/>
+        android:visibility="invisible"
+        android:id="@+id/coordinator_layout">
 
-    </RelativeLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="Tabs"
+                app:tabTextAppearance="?android:textAppearanceLarge"
+                app:tabSelectedTextColor="?android:colorPressedHighlight"/>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="50dp"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/tab_layout"-->
+<!--        android:visibility="invisible"-->
+<!--        app:tabTextAppearance="?android:textAppearanceLarge"-->
+<!--        app:tabSelectedTextColor="?android:colorPressedHighlight">-->
+
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/all_stations_txt"/>-->
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/liked_stations_txt"/>-->
+
+<!--    </com.google.android.material.tabs.TabLayout>-->
+
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/view_pager"-->
+<!--        android:layout_below="@id/coordinator_layout"/>-->
+
+</RelativeLayout>
