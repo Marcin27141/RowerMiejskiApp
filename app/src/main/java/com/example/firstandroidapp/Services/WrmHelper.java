@@ -45,6 +45,7 @@ public class WrmHelper {
     public static ArrayList<WrmStation> getWrmStations() {
         return _wrmStationsList;
     }
+
     public static ArrayList<WrmStation> getLikedWrmStations(Context context) {
         return getLikedWrmStations(context, _wrmStationsList);
     }

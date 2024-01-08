@@ -1,73 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/swipeLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:layout_margin="8dp"
-        android:background="@drawable/search_view_bg"
-        app:queryHint="@string/search_incentive"
-        app:iconifiedByDefault="false"/>
+        android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/buttonToggleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        app:selectionRequired="true"
-        app:singleSelection="true">
-
-        <Button
-            android:id="@+id/goodButton"
-            style="@style/ToggleButtonWithIconOnly"
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_happy_face"
-            app:iconSize="80dp"
-            app:iconTint="@color/buttons_selector"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
+            android:id="@+id/progressBar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:visibility="invisible"/>
 
-        <Button
-            android:id="@+id/mediumButton"
-            style="@style/ToggleButtonWithIconOnly"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:layout_margin="8dp"
+            android:background="@drawable/search_view_bg"
+            app:queryHint="@string/search_incentive"
+            app:iconifiedByDefault="false"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/buttonToggleGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_question"
-            app:iconSize="80dp"
-            app:iconTint="@color/buttons_selector"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
+            android:layout_below="@id/searchView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-        <Button
-            android:id="@+id/sadButton"
-            style="@style/ToggleButtonWithIconOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_sad_face"
-            app:iconSize="80dp"
-            app:iconTint="@color/buttons_selector"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            app:rippleColor="?android:attr/colorLongPressedHighlight"/>
+            <Button
+                android:id="@+id/goodButton"
+                style="@style/ToggleButtonWithIconOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_happy_face"
+                app:iconSize="80dp"
+                app:iconTint="@color/buttons_selector"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                app:rippleColor="?android:attr/colorLongPressedHighlight"/>
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <Button
+                android:id="@+id/mediumButton"
+                style="@style/ToggleButtonWithIconOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_question"
+                app:iconSize="80dp"
+                app:iconTint="@color/buttons_selector"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                app:rippleColor="?android:attr/colorLongPressedHighlight"/>
 
-    <ListView
-        android:id="@+id/bikesList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/buttonToggleGroup"
-        android:layout_marginTop="10dp"/>
+            <Button
+                android:id="@+id/sadButton"
+                style="@style/ToggleButtonWithIconOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_sad_face"
+                app:iconSize="80dp"
+                app:iconTint="@color/buttons_selector"
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                app:rippleColor="?android:attr/colorLongPressedHighlight"/>
 
-</RelativeLayout>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <ListView
+            android:id="@+id/bikesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/buttonToggleGroup"
+            android:layout_marginTop="10dp"/>
+
+
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

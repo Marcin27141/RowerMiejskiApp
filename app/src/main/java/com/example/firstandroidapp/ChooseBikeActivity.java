@@ -3,12 +3,14 @@ package com.example.firstandroidapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,21 +21,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+import com.example.firstandroidapp.Services.LightModeHelper;
+import com.example.firstandroidapp.Services.LocaleHelper;
+import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
 public class ChooseBikeActivity extends MenuBarActivity {
 
     private ActivityResultLauncher<Intent> ratingActivityResultLauncher;
+    private String stationId;
     private ArrayAdapter<String> bikesAdapter;
     private ListView bikesList;
     private MaterialButtonToggleGroup buttonToggleGroup;
@@ -42,6 +50,8 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private List<String> stationBikes = new ArrayList<>();
     private List<String> displayedBikes = new ArrayList<>();
     private List<String> positiveBikes, negativeBikes, ungradedBikes;
+    private SwipeRefreshLayout refreshLayout;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -50,22 +60,54 @@ public class ChooseBikeActivity extends MenuBarActivity {
         setContentView(R.layout.activity_station_bikes);
 
         WrmStation station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
-        if (station != null) stationBikes = station.bikes;
+        if (station != null) {
+            stationId = station.id;
+            stationBikes = station.bikes;
 
-        getBikeGroups();
-        displayedBikes = new ArrayList<>(stationBikes);
+            getBikeGroups();
+            displayedBikes = new ArrayList<>(stationBikes);
 
-        bikesList = findViewById(R.id.bikesList);
-        setUpBikesListAdapter();
+            bikesList = findViewById(R.id.bikesList);
+            setUpBikesListAdapter();
 
-        buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
-        setUpButtonToggleGroupCheckedListener();
+            buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
+            setUpButtonToggleGroupCheckedListener();
 
-        ratingActivityResultLauncher = getRatingActivityResultLauncher();
+            ratingActivityResultLauncher = getRatingActivityResultLauncher();
 
-        searchView = findViewById(R.id.searchView);
-        setUpSearchViewListener();
+            searchView = findViewById(R.id.searchView);
+            setUpSearchViewListener();
 
+            progressBar = findViewById(R.id.progressBar);
+            refreshLayout = findViewById(R.id.swipeLayout);
+            refreshLayout.setOnRefreshListener(() -> WrmHelper.loadWrmStationsList(result -> {
+                stationBikes = result.stream().filter(st -> st.id.equals(stationId)).findFirst().get().bikes;
+                Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
+            }));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.refresh_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.refresh_menu) {
+            progressBar.setVisibility(View.VISIBLE);
+            WrmHelper.loadWrmStationsList(result -> {
+                stationBikes = result.stream().filter(st -> st.id.equals(stationId)).findFirst().get().bikes;
+                Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+            });
+            return true;
+        } else return super.onOptionsItemSelected(item);
     }
 
     @NonNull
@@ -214,15 +256,5 @@ public class ChooseBikeActivity extends MenuBarActivity {
         Intent intent = new Intent(this, RateBikeActivity.class);
         intent.putExtra("BIKE_ID", clickedBikeId);
         ratingActivityResultLauncher.launch(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
