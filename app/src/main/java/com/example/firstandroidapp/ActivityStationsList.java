@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -57,9 +58,9 @@ public class ActivityStationsList extends MenuBarActivity {
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0)
-                tab.setText("Wszystkie");
+                tab.setText(getString(R.string.all_stations_txt));
             else
-                tab.setText("Polubione");
+                tab.setText(getString(R.string.liked_stations_txt));
         }).attach();
     }
 
@@ -81,8 +82,8 @@ public class ActivityStationsList extends MenuBarActivity {
         @Override
         public Fragment createFragment(int position) {
             if (position == 0)
-                return new AllStationsFragmentTest(wrmStationsList);
-            return new LikedStationsFragmentTest(wrmStationsList);
+                return new AllStationsFragment(wrmStationsList);
+            return new LikedStationsFragment(wrmStationsList);
         }
 
         @Override

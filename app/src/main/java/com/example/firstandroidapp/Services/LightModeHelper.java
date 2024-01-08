@@ -1,8 +1,10 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Services;
 
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.example.firstandroidapp.R;
 
 public class LightModeHelper {
     public static void setLightModeIcon(MenuItem lightModeItem) {

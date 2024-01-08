@@ -7,7 +7,9 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+
+import com.example.firstandroidapp.Services.LightModeHelper;
+import com.example.firstandroidapp.Services.LocaleHelper;
 
 import java.util.Locale;
 

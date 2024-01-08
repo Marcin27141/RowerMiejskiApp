@@ -11,18 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import java.util.ArrayList;
 
-public class AllStationsFragmentTest extends Fragment {
+public class AllStationsFragment extends Fragment {
     private TestStationsRecViewAdapter adapter;
     private final ArrayList<WrmStation> stations;
 
-    public AllStationsFragmentTest(ArrayList<WrmStation> stations) {
+    public AllStationsFragment(ArrayList<WrmStation> stations) {
         this.stations = stations;
     }
 
-    public AllStationsFragmentTest() {
+    public AllStationsFragment() {
         this.stations = WrmHelper.getWrmStations();
     }
 

@@ -1,12 +1,9 @@
 package com.example.firstandroidapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,53 +11,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
-public class LikedStationsFragmentTest extends Fragment {
-
-    private Context context;
-
-    private SearchView searchView;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class LikedStationsFragment extends Fragment {
 
     private ArrayList<WrmStation> stations;
+    private TestStationsRecViewAdapter adapter;
 
-    public LikedStationsFragmentTest(ArrayList<WrmStation> stations) {
+    public LikedStationsFragment(ArrayList<WrmStation> stations) {
         this.stations = stations;
     }
 
-    public LikedStationsFragmentTest() {
+    public LikedStationsFragment() {
         this.stations = WrmHelper.getWrmStations();
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    private TestStationsRecViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,9 +43,9 @@ public class LikedStationsFragmentTest extends Fragment {
 
         adapter = new TestStationsRecViewAdapter(requireContext(), stations);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
-        searchView = view.findViewById(R.id.searchView);
+        SearchView searchView = view.findViewById(R.id.searchView);
         setUpSearchViewListener(searchView);
         searchView.clearFocus();
 

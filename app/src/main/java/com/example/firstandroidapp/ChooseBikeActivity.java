@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
@@ -41,7 +42,6 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private List<String> stationBikes = new ArrayList<>();
     private List<String> displayedBikes = new ArrayList<>();
     private List<String> positiveBikes, negativeBikes, ungradedBikes;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -58,8 +58,6 @@ public class ChooseBikeActivity extends MenuBarActivity {
         bikesList = findViewById(R.id.bikesList);
         setUpBikesListAdapter();
 
-        setUpReturnMenuButton();
-
         buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
         setUpButtonToggleGroupCheckedListener();
 
@@ -68,10 +66,6 @@ public class ChooseBikeActivity extends MenuBarActivity {
         searchView = findViewById(R.id.searchView);
         setUpSearchViewListener();
 
-        swipeRefreshLayout = findViewById(R.id.swipeLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-
-        });
     }
 
     @NonNull
@@ -98,13 +92,6 @@ public class ChooseBikeActivity extends MenuBarActivity {
         });
     }
 
-    private void setUpReturnMenuButton() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     private void setUpBikesListAdapter() {
         bikesAdapter = new ArrayAdapter<>(
                 this,
@@ -113,6 +100,10 @@ public class ChooseBikeActivity extends MenuBarActivity {
                 displayedBikes
         );
         bikesList.setAdapter(bikesAdapter);
+        bikesList.setOnItemClickListener((parent, view, position, id) -> {
+            String clickedBike = displayedBikes.get(position);
+            launchRatingActivity(clickedBike);
+        });
     }
 
     private void resetGradingGroups(String toastMessage) {

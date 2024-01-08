@@ -32,11 +32,6 @@ public class RateBikeActivity extends MenuBarActivity {
         bikeId = getIntent().getStringExtra("BIKE_ID");
         TextView bikeIdText = findViewById(R.id.bikeId);
         bikeIdText.setText(bikeId);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     public void onSubmitRating(View view) {
