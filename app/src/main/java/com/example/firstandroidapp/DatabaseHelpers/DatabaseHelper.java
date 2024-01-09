@@ -3,8 +3,16 @@ package com.example.firstandroidapp.DatabaseHelpers;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.Rating;
+
+import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "wrm_app_database.db";
@@ -43,6 +51,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void removeRating(BikeRating rating) {
         ratingsDbHelper.removeRating(rating);
+    }
+
+    public void removeRatingForBike(String bike) {
+        ratingsDbHelper.removeRatingForBike(bike);
     }
 
     public ArrayList<String> getLikedStationsIds() {

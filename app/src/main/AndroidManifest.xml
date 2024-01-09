@@ -30,13 +30,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChooseBikeActivity"
+            android:name=".ChooseBike.ChooseBikeActivity"
             android:exported="true"
             android:parentActivityName=".ActivityStationsList"/>
         <activity
             android:name=".RateBikeActivity"
             android:exported="true"
-            android:parentActivityName=".ChooseBikeActivity"/>
+            android:parentActivityName=".ChooseBike.ChooseBikeActivity"/>
     </application>
 
 </manifest>

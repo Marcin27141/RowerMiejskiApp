@@ -13,7 +13,7 @@ import com.example.firstandroidapp.Services.LocaleHelper;
 
 import java.util.Locale;
 
-abstract class MenuBarActivity extends AppCompatActivity {
+public abstract class MenuBarActivity extends AppCompatActivity {
     private static String activeLanguage = "en";
     private static boolean disableIcons = false;
     private final static int RELOAD_TIME = 4000;

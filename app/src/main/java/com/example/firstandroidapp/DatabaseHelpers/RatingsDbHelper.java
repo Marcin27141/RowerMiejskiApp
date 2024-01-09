@@ -68,6 +68,10 @@ class RatingsDbHelper {
     }
 
     public void removeRating(BikeRating rating) {
-        generalDbHelper.getWritableDatabase().delete(RatingsTable.tableName, "bikeId = ?", new String[]{rating.bikeId});
+        removeRatingForBike(rating.bikeId);
+    }
+
+    public void removeRatingForBike(String bikeId) {
+        generalDbHelper.getWritableDatabase().delete(RatingsTable.tableName, "bikeId = ?", new String[]{bikeId});
     }
 }

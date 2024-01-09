@@ -1,55 +1,43 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.ChooseBike;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
-import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
-import com.example.firstandroidapp.Services.LightModeHelper;
-import com.example.firstandroidapp.Services.LocaleHelper;
+import com.example.firstandroidapp.MenuBarActivity;
+import com.example.firstandroidapp.R;
+import com.example.firstandroidapp.RateBikeActivity;
+import com.example.firstandroidapp.SearchViewHandler;
+import com.example.firstandroidapp.Services.RatingHelper;
 import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
-import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 
 public class ChooseBikeActivity extends MenuBarActivity {
 
     private ActivityResultLauncher<Intent> ratingActivityResultLauncher;
-    private String stationId;
-    private ArrayAdapter<String> bikesAdapter;
-    private ListView bikesList;
-    private MaterialButtonToggleGroup buttonToggleGroup;
+    private WrmStation station;
+    private List<String> positiveBikes, negativeBikes, ungradedBikes, displayedBikes;
+    private RatingHelper ratingHelper;
+    private BikesListView bikesListView;
+    private ButtonToggleGroup buttonToggleGroup;
     private SearchView searchView;
-    private ArrayList<BikeRating> ratings;
-    private List<String> stationBikes = new ArrayList<>();
-    private List<String> displayedBikes = new ArrayList<>();
-    private List<String> positiveBikes, negativeBikes, ungradedBikes;
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
 
@@ -59,18 +47,17 @@ public class ChooseBikeActivity extends MenuBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_bikes);
 
+        ratingHelper = new RatingHelper(this);
         WrmStation station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
         if (station != null) {
-            stationId = station.id;
-            stationBikes = station.bikes;
+            this.station = station;
 
-            getBikeGroups();
-            displayedBikes = new ArrayList<>(stationBikes);
+            getBikeRatingGroups();
+            displayedBikes = new ArrayList<>(station.bikes);
 
-            bikesList = findViewById(R.id.bikesList);
-            setUpBikesListAdapter();
+            setUpBikesList();
 
-            buttonToggleGroup = findViewById(R.id.buttonToggleGroup);
+            buttonToggleGroup = new ButtonToggleGroup(findViewById(R.id.buttonToggleGroup));
             setUpButtonToggleGroupCheckedListener();
 
             ratingActivityResultLauncher = getRatingActivityResultLauncher();
@@ -81,11 +68,21 @@ public class ChooseBikeActivity extends MenuBarActivity {
             progressBar = findViewById(R.id.progressBar);
             refreshLayout = findViewById(R.id.swipeLayout);
             refreshLayout.setOnRefreshListener(() -> WrmHelper.loadWrmStationsList(result -> {
-                stationBikes = result.stream().filter(st -> st.id.equals(stationId)).findFirst().get().bikes;
+                station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
                 Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
             }));
         }
+    }
+
+    private void setUpBikesList() {
+        ListView bikesList = findViewById(R.id.bikesList);
+        bikesList.setOnItemClickListener((parent, view, position, id) -> {
+            String clickedBike = displayedBikes.get(position);
+            launchRatingActivity(clickedBike);
+        });
+        bikesListView = new BikesListView(this, bikesList);
+        bikesListView.DisplayBikes(displayedBikes);
     }
 
     @Override
@@ -102,7 +99,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
         if (id == R.id.refresh_menu) {
             progressBar.setVisibility(View.VISIBLE);
             WrmHelper.loadWrmStationsList(result -> {
-                stationBikes = result.stream().filter(st -> st.id.equals(stationId)).findFirst().get().bikes;
+                station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
                 Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
             });
@@ -122,68 +119,46 @@ public class ChooseBikeActivity extends MenuBarActivity {
     }
 
     private void setUpButtonToggleGroupCheckedListener() {
-        buttonToggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked && checkedId == R.id.goodButton) {
-                displayedBikes = positiveBikes;
-            } else if (isChecked && checkedId == R.id.mediumButton) {
-                displayedBikes = ungradedBikes;
-            } else if (isChecked && checkedId == R.id.sadButton) {
-                displayedBikes = negativeBikes;
-            }
-            setBikesForAdapter(displayedBikes);
-        });
+        buttonToggleGroup.setUpListeners(
+                () -> setDisplayedBikes(positiveBikes),
+                () -> setDisplayedBikes(ungradedBikes),
+                () -> setDisplayedBikes(negativeBikes)
+        );
     }
 
-    private void setUpBikesListAdapter() {
-        bikesAdapter = new ArrayAdapter<>(
-                this,
-                R.layout.bikes_list_item,
-                R.id.bikeNumber,
-                displayedBikes
-        );
-        bikesList.setAdapter(bikesAdapter);
-        bikesList.setOnItemClickListener((parent, view, position, id) -> {
-            String clickedBike = displayedBikes.get(position);
-            launchRatingActivity(clickedBike);
-        });
+    private void setDisplayedBikes(List<String> bikes) {
+        displayedBikes = bikes;
+        bikesListView.DisplayBikes(displayedBikes);
     }
 
     private void resetGradingGroups(String toastMessage) {
         buttonToggleGroup.clearChecked();
-        getBikeGroups();
-        setBikesForAdapter(stationBikes);
+        getBikeRatingGroups();
+        bikesListView.DisplayBikes(station.bikes);
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void setUpSearchViewListener() {
         searchView.setOnQueryTextListener(new SearchViewHandler<>(
-                stationBikes,
+                station.bikes,
                 String::contains,
                 filtered -> {
-                    setBikesForAdapter(filtered);
+                    bikesListView.DisplayBikes(filtered);
                     if (filtered.isEmpty())
                         Toast.makeText(this, R.string.no_bikes_found_msg, Toast.LENGTH_LONG).show();
                 }
         ));
     }
 
-    private void setBikesForAdapter(List<String> bikesList) {
-        bikesAdapter.clear();
-        bikesAdapter.addAll(bikesList);
-        bikesAdapter.notifyDataSetChanged();
-    }
-
-    private void getBikeGroups() {
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            ratings = dbHelper.getAllRatings();
-            positiveBikes = ratings.stream().filter(r -> r.wasPositive && stationBikes.contains(r.bikeId)).map(r -> r.bikeId).collect(Collectors.toList());
-            negativeBikes = ratings.stream().filter(r -> !r.wasPositive && stationBikes.contains(r.bikeId)).map(r -> r.bikeId).collect(Collectors.toList());
-            ungradedBikes = stationBikes.stream().filter(b -> ratings.stream().noneMatch(r -> r.bikeId.equals(b))).collect(Collectors.toList());
-        }
+    private void getBikeRatingGroups() {
+        Map<RatingHelper.RatedStatus, List<String>> bikes = ratingHelper.GetStationGradedBikes(station);
+        positiveBikes = bikes.get(RatingHelper.RatedStatus.Positive);
+        negativeBikes = bikes.get(RatingHelper.RatedStatus.Negative);
+        ungradedBikes = bikes.get(RatingHelper.RatedStatus.Ungraded);
     }
 
     public void onBikeListMoreIconClicked(View view) {
-        int position = bikesList.getPositionForView(view);
+        int position = bikesListView.GetPositionForView(view);
 
         if (position != ListView.INVALID_POSITION) {
             String clickedBikeId = displayedBikes.get(position);
@@ -194,7 +169,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     }
 
     private void configurePopupMenu(String clickedBikeId, PopupMenu popupMenu) {
-        if (ratings.stream().anyMatch(r -> r.bikeId.equals(clickedBikeId))) {
+        if (positiveBikes.contains(clickedBikeId)) {
             popupMenu.inflate(R.menu.bike_list_graded_popup_menu);
             setUpRatedBikeMenuClickedListener(clickedBikeId, popupMenu);
         } else {
@@ -219,36 +194,13 @@ public class ChooseBikeActivity extends MenuBarActivity {
             else if (item.getItemId() == R.id.removeRatingItem)
                 removeBikeRating(clickedBikeId);
             else if (item.getItemId() == R.id.descriptionItem)
-                showRatingDescription(clickedBikeId);
+                new RatingDescriptionDialog(this).showDescription(clickedBikeId);
             return true;
         });
     }
 
-    private void showRatingDescription(String clickedBikeId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.description_dialog, null);
-        setDialogViewContent(clickedBikeId, dialogView);
-
-        builder.setView(dialogView)
-                .setTitle(R.string.description)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void setDialogViewContent(String clickedBikeId, View dialogView) {
-        TextView dialogTextView = dialogView.findViewById(R.id.descriptionDialogTxt);
-        Optional<BikeRating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
-        boolean descriptionProvided = rating.isPresent() && !rating.get().description.isEmpty();
-        String descriptionTxt = descriptionProvided ? rating.get().description : getResources().getString(R.string.no_description);
-        dialogTextView.setText(descriptionTxt);
-    }
-
     private void removeBikeRating(String clickedBikeId) {
-        Optional<BikeRating> rating = ratings.stream().filter(r -> r.bikeId.equals(clickedBikeId)).findFirst();
-        rating.ifPresent(value -> new DatabaseHelper(this).removeRating(value));
+        ratingHelper.RemoveBikeRating(clickedBikeId);
         resetGradingGroups(getResources().getString(R.string.rating_deleted_info));
     }
 
