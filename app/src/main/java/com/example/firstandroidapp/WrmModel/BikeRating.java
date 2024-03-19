@@ -1,4 +1,4 @@
-package com.example.firstandroidapp.DatabaseHelpers;
+package com.example.firstandroidapp.WrmModel;
 
 public class BikeRating {
     public int reviewId = -1;

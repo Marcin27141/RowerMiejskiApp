@@ -1,4 +1,4 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Activities;
 
 import androidx.appcompat.widget.SearchView;
 
@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 
 public class SearchViewHandler<T> implements SearchView.OnQueryTextListener {
 
-    private List<T> items;
-    private BiPredicate<T, String> predicate;
-    private Consumer<ArrayList<T>> finishingFunction;
+    private final List<T> items;
+    private final BiPredicate<T, String> predicate;
+    private final Consumer<ArrayList<T>> finishingFunction;
     public SearchViewHandler(List<T> items, BiPredicate<T, String> predicate, Consumer<ArrayList<T>> finishingFunction) {
         this.items = items;
         this.predicate = predicate;

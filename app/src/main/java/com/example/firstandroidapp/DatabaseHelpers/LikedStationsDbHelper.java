@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 class LikedStationsDbHelper {
-    private SQLiteOpenHelper generalDbHelper;
+    private final SQLiteOpenHelper generalDbHelper;
 
     public LikedStationsDbHelper(SQLiteOpenHelper generalDbHelper) {
         this.generalDbHelper = generalDbHelper;
@@ -29,9 +29,7 @@ class LikedStationsDbHelper {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String stationId = cursor.getString(cursor.getColumnIndexOrThrow("stationId"));
-
                 likedStationsIds.add(stationId);
             }
             cursor.close();

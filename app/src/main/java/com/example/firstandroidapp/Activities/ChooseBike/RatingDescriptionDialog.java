@@ -1,4 +1,4 @@
-package com.example.firstandroidapp.ChooseBike;
+package com.example.firstandroidapp.Activities.ChooseBike;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,15 +7,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
+import com.example.firstandroidapp.WrmModel.BikeRating;
 import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.Services.RatingHelper;
 
 import java.util.Optional;
 
 public class RatingDescriptionDialog {
-    private Context context;
-    private RatingHelper ratingHelper;
+    private final Context context;
+    private final RatingHelper ratingHelper;
     public RatingDescriptionDialog(Context context) {
         this.context = context;
         this.ratingHelper = new RatingHelper(context);

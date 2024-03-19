@@ -1,4 +1,4 @@
-package com.example.firstandroidapp.ChooseBike;
+package com.example.firstandroidapp.Activities.ChooseBike;
 
 import android.content.Context;
 import android.view.View;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BikesListView {
-    private Context context;
-    private ListView bikesList;
+    private final Context context;
+    private final ListView bikesList;
     private ArrayAdapter<String> bikesAdapter;
-    private ArrayList<String> displayedBikes = new ArrayList<>();
+    private List<String> displayedBikes = new ArrayList<>();
 
 
     public BikesListView(Context context, ListView bikes) {
@@ -34,13 +34,16 @@ public class BikesListView {
 
     }
 
-    public void DisplayBikes(List<String> bikesList) {
+    public void displayBikes(List<String> bikesList) {
+        displayedBikes = bikesList;
         bikesAdapter.clear();
-        bikesAdapter.addAll(bikesList);
+        bikesAdapter.addAll(displayedBikes);
         bikesAdapter.notifyDataSetChanged();
     }
-
-    public int GetPositionForView(View view) {
+    public List<String> getDisplayedBikes() {
+        return displayedBikes;
+    }
+    public int getPositionForView(View view) {
         return bikesList.getPositionForView(view);
     }
 }

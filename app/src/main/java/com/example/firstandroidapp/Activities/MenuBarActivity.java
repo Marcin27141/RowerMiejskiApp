@@ -1,4 +1,4 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Activities;
 
 import android.os.Handler;
 import android.view.Menu;
@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.Services.LightModeHelper;
 import com.example.firstandroidapp.Services.LocaleHelper;
 
@@ -62,6 +63,10 @@ public abstract class MenuBarActivity extends AppCompatActivity {
         this.lightModeItem = menu.findItem(R.id.light_mode_menu);
         this.languageItem = menu.findItem(R.id.language_menu);
 
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         if (id == R.id.light_mode_menu) {
             disableIcons = true;
             LightModeHelper.changeLightMode(lightModeItem);

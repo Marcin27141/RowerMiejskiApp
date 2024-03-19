@@ -1,18 +1,18 @@
-package com.example.firstandroidapp.ChooseBike;
+package com.example.firstandroidapp.Activities.ChooseBike;
 
 import com.example.firstandroidapp.R;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public class ButtonToggleGroup {
-    private MaterialButtonToggleGroup toggleGroup;
+    private final MaterialButtonToggleGroup toggleGroup;
 
     public ButtonToggleGroup(MaterialButtonToggleGroup toggleGroup) {
         this.toggleGroup = toggleGroup;
     }
     void setUpListeners(
-            IOnMenuItemClicked onPositiveButton,
-            IOnMenuItemClicked onUngradedButton,
-            IOnMenuItemClicked onNegativeButton
+            IOnItemClicked onPositiveButton,
+            IOnItemClicked onUngradedButton,
+            IOnItemClicked onNegativeButton
     ) {
         toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (!isChecked) return;

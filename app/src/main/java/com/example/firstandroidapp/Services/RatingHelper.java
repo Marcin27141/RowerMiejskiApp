@@ -2,9 +2,11 @@ package com.example.firstandroidapp.Services;
 
 import android.content.Context;
 
-import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
+import com.example.firstandroidapp.Activities.ChooseBike.IRatingGroupsHolder;
+import com.example.firstandroidapp.Activities.ChooseBike.IRatingGroupsProvider;
+import com.example.firstandroidapp.Activities.RatedStatus;
+import com.example.firstandroidapp.WrmModel.BikeRating;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
-import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
@@ -14,27 +16,31 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RatingHelper {
-    private DatabaseHelper dbHelper;
-    private ArrayList<BikeRating> ratings;
+public class RatingHelper implements IRatingGroupsProvider {
+    private final Context context;
     public RatingHelper(Context context) {
-        try(DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-            this.dbHelper = dbHelper;
-            ratings = dbHelper.getAllRatings();
-        }
+        this.context = context;
     }
 
     public ArrayList<BikeRating> GetAllRatings() {
-        return ratings;
+        try(DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            return dbHelper.getAllRatings();
+        }
     }
 
-    public enum RatedStatus {
-        Positive,
-        Negative,
-        Ungraded
+    public Optional<BikeRating> GetBikeRating(String bikeId) {
+        ArrayList<BikeRating> ratings = GetAllRatings();
+        return ratings.stream().filter(r -> r.bikeId.equals(bikeId)).findFirst();
     }
 
-    public Map<RatedStatus, List<String>> GetStationGradedBikes(WrmStation station) {
+    public void RemoveBikeRating(String bikeId) {
+        try(DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            dbHelper.removeRatingForBike(bikeId);
+        }
+    }
+
+    @Override
+    public IRatingGroupsHolder getRatingGroups(WrmStation station) {
         ArrayList<BikeRating> ratings = GetAllRatings();
 
         List<String> positiveBikes = ratings.stream().filter(r -> r.wasPositive && station.bikes.contains(r.bikeId)).map(r -> r.bikeId).collect(Collectors.toList());
@@ -45,14 +51,29 @@ public class RatingHelper {
         result.put(RatedStatus.Positive, positiveBikes);
         result.put(RatedStatus.Negative, negativeBikes);
         result.put(RatedStatus.Ungraded, ungradedBikes);
-        return result;
+
+        return new RatingGroupsHolder(result);
     }
 
-    public Optional<BikeRating> GetBikeRating(String bikeId) {
-        return ratings.stream().filter(r -> r.bikeId.equals(bikeId)).findFirst();
-    }
+    static class RatingGroupsHolder implements IRatingGroupsHolder {
+        private final Map<RatedStatus, List<String>> groups;
+        public RatingGroupsHolder(Map<RatedStatus, List<String>> groups) {
+            this.groups = groups;
+        }
 
-    public void RemoveBikeRating(String bikeId) {
-        dbHelper.removeRatingForBike(bikeId);
+        @Override
+        public List<String> getPositiveBikes() {
+            return groups.get(RatedStatus.Positive);
+        }
+
+        @Override
+        public List<String> getUngradedBikes() {
+            return groups.get(RatedStatus.Ungraded);
+        }
+
+        @Override
+        public List<String> getNegativeBikes() {
+            return groups.get(RatedStatus.Negative);
+        }
     }
 }

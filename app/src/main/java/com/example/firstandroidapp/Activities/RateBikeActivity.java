@@ -1,20 +1,19 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
-import com.example.firstandroidapp.DatabaseHelpers.BikeRating;
+import com.example.firstandroidapp.WrmModel.BikeRating;
+import com.example.firstandroidapp.R;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -74,15 +73,5 @@ public class RateBikeActivity extends MenuBarActivity {
         resultIntent.putExtra("RATING_ADDED", true);
         setResult(RESULT_OK, resultIntent);
         finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

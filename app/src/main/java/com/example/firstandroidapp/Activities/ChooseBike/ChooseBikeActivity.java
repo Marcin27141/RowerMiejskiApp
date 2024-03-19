@@ -1,4 +1,4 @@
-package com.example.firstandroidapp.ChooseBike;
+package com.example.firstandroidapp.Activities.ChooseBike;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,30 +16,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.firstandroidapp.MenuBarActivity;
+import com.example.firstandroidapp.Activities.MenuBarActivity;
 import com.example.firstandroidapp.R;
-import com.example.firstandroidapp.RateBikeActivity;
-import com.example.firstandroidapp.SearchViewHandler;
+import com.example.firstandroidapp.Activities.RateBikeActivity;
+import com.example.firstandroidapp.Activities.SearchViewHandler;
 import com.example.firstandroidapp.Services.RatingHelper;
 import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class ChooseBikeActivity extends MenuBarActivity {
-
-    private ActivityResultLauncher<Intent> ratingActivityResultLauncher;
     private WrmStation station;
-    private List<String> positiveBikes, negativeBikes, ungradedBikes, displayedBikes;
     private RatingHelper ratingHelper;
+    private IRatingGroupsHolder ratingGroups;
     private BikesListView bikesListView;
     private ButtonToggleGroup buttonToggleGroup;
-    private SearchView searchView;
-    private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
 
     @Override
@@ -48,41 +44,22 @@ public class ChooseBikeActivity extends MenuBarActivity {
         setContentView(R.layout.activity_station_bikes);
 
         ratingHelper = new RatingHelper(this);
-        WrmStation station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
+        station = (WrmStation) getIntent().getSerializableExtra("SERIALIZED_STATION");
         if (station != null) {
-            this.station = station;
+            activityResultLauncher = getRatingActivityResultLauncher();
 
             getBikeRatingGroups();
-            displayedBikes = new ArrayList<>(station.bikes);
-
             setUpBikesList();
 
             buttonToggleGroup = new ButtonToggleGroup(findViewById(R.id.buttonToggleGroup));
             setUpButtonToggleGroupCheckedListener();
 
-            ratingActivityResultLauncher = getRatingActivityResultLauncher();
-
-            searchView = findViewById(R.id.searchView);
-            setUpSearchViewListener();
+            SearchView searchView = findViewById(R.id.searchView);
+            setUpSearchViewListener(searchView);
 
             progressBar = findViewById(R.id.progressBar);
-            refreshLayout = findViewById(R.id.swipeLayout);
-            refreshLayout.setOnRefreshListener(() -> WrmHelper.loadWrmStationsList(result -> {
-                station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
-                Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
-            }));
+            setUpRefreshLayout();
         }
-    }
-
-    private void setUpBikesList() {
-        ListView bikesList = findViewById(R.id.bikesList);
-        bikesList.setOnItemClickListener((parent, view, position, id) -> {
-            String clickedBike = displayedBikes.get(position);
-            launchRatingActivity(clickedBike);
-        });
-        bikesListView = new BikesListView(this, bikesList);
-        bikesListView.DisplayBikes(displayedBikes);
     }
 
     @Override
@@ -97,71 +74,90 @@ public class ChooseBikeActivity extends MenuBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.refresh_menu) {
-            progressBar.setVisibility(View.VISIBLE);
-            WrmHelper.loadWrmStationsList(result -> {
-                station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
-                Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.INVISIBLE);
-            });
+            refreshBikesList();
             return true;
         } else return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshBikesList() {
+        progressBar.setVisibility(View.VISIBLE);
+        WrmHelper.loadWrmStationsList(result -> {
+            station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
+            Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.INVISIBLE);
+        });
     }
 
     @NonNull
     private ActivityResultLauncher<Intent> getRatingActivityResultLauncher() {
         return registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        resetGradingGroups(getResources().getString(R.string.rating_added_info));
-                    }
-                });
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    resetGradingGroups(getResources().getString(R.string.rating_added_info));
+                }
+            });
+    }
+
+    private void setUpRefreshLayout() {
+        SwipeRefreshLayout refreshLayout = findViewById(R.id.swipeLayout);
+        refreshLayout.setOnRefreshListener(() -> WrmHelper.loadWrmStationsList(result -> {
+            station.bikes = result.stream().filter(st -> st.id.equals(station.id)).findFirst().get().bikes;
+            Toast.makeText(this, "Successfully refreshed", Toast.LENGTH_SHORT).show();
+            refreshLayout.setRefreshing(false);
+        }));
+    }
+
+    private void setUpBikesList() {
+        ListView bikesList = findViewById(R.id.bikesList);
+        bikesListView = new BikesListView(this, bikesList);
+        bikesList.setOnItemClickListener((parent, view, position, id) -> {
+            String clickedBike = bikesListView.getDisplayedBikes().get(position);
+            launchRatingActivity(clickedBike);
+        });
+        bikesListView.displayBikes(new ArrayList<>(station.bikes));
     }
 
     private void setUpButtonToggleGroupCheckedListener() {
         buttonToggleGroup.setUpListeners(
-                () -> setDisplayedBikes(positiveBikes),
-                () -> setDisplayedBikes(ungradedBikes),
-                () -> setDisplayedBikes(negativeBikes)
+                () -> setDisplayedBikes(ratingGroups.getPositiveBikes()),
+                () -> setDisplayedBikes(ratingGroups.getUngradedBikes()),
+                () -> setDisplayedBikes(ratingGroups.getNegativeBikes())
         );
     }
 
+    private void setUpSearchViewListener(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchViewHandler<>(
+            station.bikes,
+            String::contains,
+            filtered -> {
+                bikesListView.displayBikes(filtered);
+                if (filtered.isEmpty())
+                    Toast.makeText(this, R.string.no_bikes_found_msg, Toast.LENGTH_LONG).show();
+            }
+        ));
+    }
+
     private void setDisplayedBikes(List<String> bikes) {
-        displayedBikes = bikes;
-        bikesListView.DisplayBikes(displayedBikes);
+        bikesListView.displayBikes(bikes);
     }
 
     private void resetGradingGroups(String toastMessage) {
         buttonToggleGroup.clearChecked();
         getBikeRatingGroups();
-        bikesListView.DisplayBikes(station.bikes);
+        bikesListView.displayBikes(station.bikes);
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
-    private void setUpSearchViewListener() {
-        searchView.setOnQueryTextListener(new SearchViewHandler<>(
-                station.bikes,
-                String::contains,
-                filtered -> {
-                    bikesListView.DisplayBikes(filtered);
-                    if (filtered.isEmpty())
-                        Toast.makeText(this, R.string.no_bikes_found_msg, Toast.LENGTH_LONG).show();
-                }
-        ));
-    }
-
     private void getBikeRatingGroups() {
-        Map<RatingHelper.RatedStatus, List<String>> bikes = ratingHelper.GetStationGradedBikes(station);
-        positiveBikes = bikes.get(RatingHelper.RatedStatus.Positive);
-        negativeBikes = bikes.get(RatingHelper.RatedStatus.Negative);
-        ungradedBikes = bikes.get(RatingHelper.RatedStatus.Ungraded);
+        ratingGroups = ratingHelper.getRatingGroups(station);
     }
 
     public void onBikeListMoreIconClicked(View view) {
-        int position = bikesListView.GetPositionForView(view);
+        int position = bikesListView.getPositionForView(view);
 
         if (position != ListView.INVALID_POSITION) {
-            String clickedBikeId = displayedBikes.get(position);
+            String clickedBikeId = bikesListView.getDisplayedBikes().get(position);
             PopupMenu popupMenu = new PopupMenu(this, view);
             configurePopupMenu(clickedBikeId, popupMenu);
             popupMenu.show();
@@ -169,7 +165,7 @@ public class ChooseBikeActivity extends MenuBarActivity {
     }
 
     private void configurePopupMenu(String clickedBikeId, PopupMenu popupMenu) {
-        if (positiveBikes.contains(clickedBikeId)) {
+        if (!ratingGroups.getUngradedBikes().contains(clickedBikeId)) {
             popupMenu.inflate(R.menu.bike_list_graded_popup_menu);
             setUpRatedBikeMenuClickedListener(clickedBikeId, popupMenu);
         } else {
@@ -207,6 +203,6 @@ public class ChooseBikeActivity extends MenuBarActivity {
     private void launchRatingActivity(String clickedBikeId) {
         Intent intent = new Intent(this, RateBikeActivity.class);
         intent.putExtra("BIKE_ID", clickedBikeId);
-        ratingActivityResultLauncher.launch(intent);
+        activityResultLauncher.launch(intent);
     }
 }

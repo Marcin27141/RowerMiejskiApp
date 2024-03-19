@@ -1,4 +1,4 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Activities.Stations;
 
 
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.firstandroidapp.Activities.MenuBarActivity;
+import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import com.google.android.material.tabs.TabLayout;

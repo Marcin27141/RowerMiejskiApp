@@ -1,4 +1,4 @@
-package com.example.firstandroidapp;
+package com.example.firstandroidapp.Activities.Stations;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.firstandroidapp.ChooseBike.ChooseBikeActivity;
+import com.example.firstandroidapp.Activities.ChooseBike.ChooseBikeActivity;
 import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+import com.example.firstandroidapp.R;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 
 import java.util.ArrayList;

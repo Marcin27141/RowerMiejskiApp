@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.firstandroidapp.WrmModel.BikeRating;
+
 import java.util.ArrayList;
 
 class RatingsDbHelper {
-    private SQLiteOpenHelper generalDbHelper;
+    private final SQLiteOpenHelper generalDbHelper;
 
     public RatingsDbHelper(SQLiteOpenHelper generalDbHelper) {
         this.generalDbHelper = generalDbHelper;
@@ -65,10 +67,6 @@ class RatingsDbHelper {
         } finally {
             db.endTransaction();
         }
-    }
-
-    public void removeRating(BikeRating rating) {
-        removeRatingForBike(rating.bikeId);
     }
 
     public void removeRatingForBike(String bikeId) {
