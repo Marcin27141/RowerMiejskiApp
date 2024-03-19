@@ -10,13 +10,13 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.firstandroidapp.DatabaseHelpers.DatabaseHelper;
+
 import com.example.firstandroidapp.Services.WrmHelper;
 import com.example.firstandroidapp.WrmModel.WrmStation;
 import java.util.ArrayList;
 
 public class AllStationsFragment extends Fragment {
-    private TestStationsRecViewAdapter adapter;
+    private AllStationsRecyclerViewAdapter adapter;
     private final ArrayList<WrmStation> stations;
 
     public AllStationsFragment(ArrayList<WrmStation> stations) {
@@ -32,20 +32,27 @@ public class AllStationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_stations_test, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.stationsRecView);
-        adapter = new TestStationsRecViewAdapter(requireContext(), stations);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-
-        SearchView searchView = view.findViewById(R.id.searchView);
-        setUpSearchViewListener(searchView);
-        searchView.clearFocus();
+        setUpRecyclerView(view);
+        setUpSearchView(view);
 
         getParentFragmentManager().setFragmentResultListener("StationUnliked", getViewLifecycleOwner(), (requestKey, bundle) -> {
             adapter.updateList();
         });
 
         return view;
+    }
+
+    private void setUpSearchView(View view) {
+        SearchView searchView = view.findViewById(R.id.searchView);
+        setUpSearchViewListener(searchView);
+        searchView.clearFocus();
+    }
+
+    private void setUpRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.stationsRecView);
+        adapter = new AllStationsRecyclerViewAdapter(requireContext(), stations);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
     }
 
     private void setUpSearchViewListener(SearchView searchView) {
@@ -60,16 +67,17 @@ public class AllStationsFragment extends Fragment {
         ));
     }
 
-    class TestStationsRecViewAdapter extends StationsListAdapter {
+    class AllStationsRecyclerViewAdapter extends StationsListAdapter {
         private ArrayList<String> likedStationsIds;
 
-        public TestStationsRecViewAdapter(Context context, ArrayList<WrmStation> stations) {
+        public AllStationsRecyclerViewAdapter(Context context, ArrayList<WrmStation> stations) {
             super(context, stations);
-            likedStationsIds = new DatabaseHelper(context).getLikedStationsIds();
+            likedStationsIds = WrmHelper.getLikedWrmStationsIds(context);
         }
 
         @Override
         void onLikedListChanged() {
+            updateList();
             getParentFragmentManager().setFragmentResult("LikedListChanged", Bundle.EMPTY);
         }
 
@@ -80,7 +88,7 @@ public class AllStationsFragment extends Fragment {
 
         @Override
         public void updateList() {
-            likedStationsIds = new DatabaseHelper(context).getLikedStationsIds();
+            likedStationsIds = WrmHelper.getLikedWrmStationsIds(context);
             notifyDataSetChanged();
         }
     }

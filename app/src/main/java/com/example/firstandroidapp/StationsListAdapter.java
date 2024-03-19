@@ -43,9 +43,7 @@ public abstract class StationsListAdapter extends RecyclerView.Adapter<StationsL
     public void onBindViewHolder(@NonNull StationViewHolder holder, int position) {
         holder.stationLocationTxt.setText(listItems.get(position).location.name);
         holder.stationIdTxt.setText((listItems.get(position).id));
-        holder.parent.setOnClickListener(view -> {
-            showChooseBikeActivity(position);
-        });
+        holder.parent.setOnClickListener(view -> showChooseBikeActivity(position));
 
         holder.starIconCheckBox.setOnClickListener(v -> {
             boolean isChecked = ((CheckBox)v).isChecked();
@@ -60,16 +58,11 @@ public abstract class StationsListAdapter extends RecyclerView.Adapter<StationsL
                 {
                     dbHelper.removeLikedStation(stationId);
                 }
-                //likedStationsIds = new DatabaseHelper(context).getLikedStationsIds();
-                updateList();
             }
 
-            //getParentFragmentManager().setFragmentResult("LikedListChanged", Bundle.EMPTY);
             onLikedListChanged();
         });
 
-
-        //holder.starIconCheckBox.setChecked(likedStationsIds.contains(holder.stationIdTxt.getText().toString()));
         holder.starIconCheckBox.setChecked(isStationLiked(listItems.get(position)));
     }
 

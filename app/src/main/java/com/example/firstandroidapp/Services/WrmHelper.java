@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class WrmHelper {
     private static ArrayList<WrmStation> _wrmStationsList = new ArrayList<>();
+    private final static String CELLS_SEPARATOR = ", ";
 
     public static void loadWrmStationsList(Consumer<ArrayList<WrmStation>> postHandler) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -46,19 +47,22 @@ public class WrmHelper {
         return _wrmStationsList;
     }
 
+    public static ArrayList<String> getLikedWrmStationsIds(Context context) {
+        try(DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            return dbHelper.getLikedStationsIds();
+        }
+    }
+
     public static ArrayList<WrmStation> getLikedWrmStations(Context context) {
         return getLikedWrmStations(context, _wrmStationsList);
     }
 
     public static ArrayList<WrmStation> getLikedWrmStations(Context context, ArrayList<WrmStation> stations) {
-        try {
-            ArrayList<String> liked = new DatabaseHelper(context).getLikedStationsIds();
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            ArrayList<String> liked = dbHelper.getLikedStationsIds();
             return stations.stream().filter(s -> liked.contains(s.id)).collect(Collectors.toCollection(ArrayList::new));
-        } catch (Exception ignored) {
-            return new ArrayList<>();
         }
     }
-
 
     private static void populateStationsList(ArrayList<WrmStation> result) throws IOException {
         Document doc = Jsoup.connect("https://wroclawskirower.pl/mapa-stacji/").get();
@@ -66,31 +70,41 @@ public class WrmHelper {
         Element table = divContainer.select("table").first();
 
         if (table != null) {
+            WrmGenerator stationGenerator = new WrmGenerator();
             Elements rows = table.select("tr");
             for (int i = 1; i < rows.size() - 1; i++) {
                 Element row = rows.get(i);
                 Elements cells = row.select("td");
-                result.add(generateWrmStation(cells));
+                result.add(stationGenerator.generateWrmStation(cells));
             }
         }
     }
 
-    private static WrmStation generateWrmStation(Elements cells) {
-        String SEPARATOR = ", ";
+    private static class WrmGenerator {
+        public WrmStation generateWrmStation(Elements cells) {
+            String stationId = getStationIdFromCells(cells);
+            Location location = getLocationFromCells(cells);
+            ArrayList<String> bikes = getBikesFromCells(cells);
+            return new WrmStation(stationId, location, bikes);
+        }
 
-        String stationId = cells.get(0).text();
+        private String getStationIdFromCells(Elements cells) {
+            return cells.get(0).text();
+        }
 
-        String locationName = cells.get(1).text();
-        String[] coordinates = cells.get(3).text().split(SEPARATOR);
-        float xCoordinate = Float.parseFloat(coordinates[0]);
-        float yCoordinate = Float.parseFloat(coordinates[1]);
-        Location location = new Location(locationName, xCoordinate, yCoordinate);
+        private ArrayList<String> getBikesFromCells(Elements cells) {
+            String bikesString = cells.get(5).text();
+            String[] bikesArray = bikesString.length() == 0 ? new String[0] : bikesString.split(CELLS_SEPARATOR);
+            return new ArrayList<>(Arrays.asList(bikesArray));
+        }
 
-        String bikesString = cells.get(5).text();
-        String[] bikesArray = bikesString.length() == 0 ? new String[0] : bikesString.split(SEPARATOR);
-        ArrayList<String> bikes = new ArrayList<>(Arrays.asList(bikesArray));
-
-        return new WrmStation(stationId, location, bikes);
+        private Location getLocationFromCells(Elements cells) {
+            String locationName = cells.get(1).text();
+            String[] coordinates = cells.get(3).text().split(CELLS_SEPARATOR);
+            float xCoordinate = Float.parseFloat(coordinates[0]);
+            float yCoordinate = Float.parseFloat(coordinates[1]);
+            return new Location(locationName, xCoordinate, yCoordinate);
+        }
     }
 }
 

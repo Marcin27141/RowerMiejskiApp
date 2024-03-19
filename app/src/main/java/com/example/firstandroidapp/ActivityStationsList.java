@@ -23,19 +23,11 @@ import java.util.ArrayList;
 public class ActivityStationsList extends MenuBarActivity {
 
     private ArrayList<WrmStation> wrmStationsList;
-    private TabLayout tabLayout;
-    private CoordinatorLayout coordinatorLayout;
-    private ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stations_list);
-
-        tabLayout = findViewById(R.id.tab_layout);
-        coordinatorLayout = findViewById(R.id.coordinator_layout);
-        progressBar = findViewById(R.id.progressBar);
 
         if (savedInstanceState != null) {
             wrmStationsList = WrmHelper.getWrmStations();
@@ -52,8 +44,9 @@ public class ActivityStationsList extends MenuBarActivity {
     }
 
     private void setUpViewPager() {
-        PagerAdapter adapter = new PagerAdapter(this, wrmStationsList);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager = findViewById(R.id.viewPager);
+        PagerAdapter adapter = new PagerAdapter(this, wrmStationsList);
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
@@ -65,6 +58,9 @@ public class ActivityStationsList extends MenuBarActivity {
     }
 
     private void showView() {
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_layout);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+
         progressBar.setVisibility(View.INVISIBLE);
         coordinatorLayout.setVisibility(View.VISIBLE);
     }
